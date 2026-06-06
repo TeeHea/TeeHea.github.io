@@ -114,7 +114,6 @@
             cursor: text;
         }
         .page-container { padding: 2rem; }
-        /* Row styling (dynamic) */
         .row {
             display: flex;
             flex-wrap: wrap;
@@ -149,7 +148,6 @@
             padding: 0.2rem 0.4rem;
             border-radius: 4px;
         }
-        /* Column styling (dynamic) */
         .col {
             flex: 1;
             min-width: 200px;
@@ -364,12 +362,12 @@
 
 <script>
     // ---------- Data model ----------
-    let page = [];  // array of rows, each row: { id, columns: [{ id, blocks: [] }], style: { bg, minHeight, paddingTop, paddingBottom, gap } }
+    let page = [];
     let nextId = 1000;
     let history = [];
     let historyIndex = -1;
     let isUndoRedo = false;
-    let selectedElement = null; // { type: 'row', rowIdx } or { type: 'col', rowIdx, colIdx } or { type: 'block', path }
+    let selectedElement = null;
 
     function escapeHtml(s){ if(!s) return ''; return s.replace(/[&<>]/g,m=>m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
 
@@ -419,7 +417,7 @@
         if(type==='search') return { id, type };
         if(type==='share') return { id, type, url: 'https://example.com' };
         if(type==='html') return { id, type, code: '<div>Custom HTML</div>' };
-        if(type==='qrcode') return { id, type, text: 'https://teehea.com' };
+        if(type==='qrcode') return { id, type, text: 'https://teehea.github.io' };
         if(type==='copy') return { id, type, text: 'Copy this text' };
         if(type==='weather') return { id, type, city: 'London' };
         return { id, type, text: 'New block' };
@@ -443,7 +441,6 @@
     function undo() { if(historyIndex>0){ isUndoRedo=true; historyIndex--; page=JSON.parse(JSON.stringify(history[historyIndex])); renderPage(); isUndoRedo=false; } }
     function redo() { if(historyIndex<history.length-1){ isUndoRedo=true; historyIndex++; page=JSON.parse(JSON.stringify(history[historyIndex])); renderPage(); isUndoRedo=false; } }
 
-    // Render page with rows, columns, blocks
     function renderPage() {
         const container = document.getElementById('pageContainer');
         if(!container) return;
@@ -459,13 +456,11 @@
                 rowDiv.className = 'row';
                 rowDiv.setAttribute('data-row-id', row.id);
                 rowDiv.setAttribute('data-row-idx', rowIdx);
-                // Apply row styles
                 if(row.style.bg) rowDiv.style.backgroundColor = row.style.bg;
                 if(row.style.minHeight) rowDiv.style.minHeight = row.style.minHeight;
                 if(row.style.paddingTop) rowDiv.style.paddingTop = row.style.paddingTop;
                 if(row.style.paddingBottom) rowDiv.style.paddingBottom = row.style.paddingBottom;
                 if(row.style.gap) rowDiv.style.gap = row.style.gap;
-                // Row actions
                 const rowActions = document.createElement('div');
                 rowActions.className = 'row-actions';
                 rowActions.innerHTML = `<button class="row-action delete-row" title="Delete row">🗑️</button><button class="row-action add-col" title="Add column">+ Col</button>`;
@@ -482,23 +477,19 @@
                     renderPage();
                 });
                 rowDiv.appendChild(rowActions);
-                // Row click to select
                 rowDiv.addEventListener('click', (e) => {
                     if(e.target === rowDiv || e.target.classList.contains('row')) {
                         selectedElement = { type: 'row', rowIdx };
                         updateElementProperties();
                     }
                 });
-                // Columns
                 row.columns.forEach((col, colIdx) => {
                     const colDiv = document.createElement('div');
                     colDiv.className = 'col';
                     colDiv.setAttribute('data-col-id', col.id);
                     colDiv.setAttribute('data-col-path', `${rowIdx},${colIdx}`);
-                    // Column styles: flex width
                     if(col.style && col.style.flex) colDiv.style.flex = col.style.flex;
                     if(col.style && col.style.bg) colDiv.style.backgroundColor = col.style.bg;
-                    // Column actions
                     const colActions = document.createElement('div');
                     colActions.className = 'col-actions';
                     colActions.innerHTML = `<button class="col-action delete-col" title="Delete column">✖</button>`;
@@ -510,7 +501,6 @@
                         renderPage();
                     });
                     colDiv.appendChild(colActions);
-                    // Column click to select
                     colDiv.addEventListener('click', (e) => {
                         if(e.target === colDiv || e.target.classList.contains('col')) {
                             selectedElement = { type: 'col', rowIdx, colIdx };
@@ -568,7 +558,6 @@
         div.appendChild(actions);
         const contentDiv = document.createElement('div');
         contentDiv.className = 'block-content';
-        // Render block content (simplified for brevity, but complete)
         if(block.type === 'heading') contentDiv.innerHTML = `<h2 style="margin:0;">${escapeHtml(block.text)}</h2>`;
         else if(block.type === 'paragraph') contentDiv.innerHTML = `<p style="margin:0;">${escapeHtml(block.text).replace(/\n/g,'<br>')}</p>`;
         else if(block.type === 'image') contentDiv.innerHTML = `<img src="${escapeHtml(block.src)}" alt="${escapeHtml(block.alt)}" style="max-width:100%; border-radius:8px;">`;
@@ -636,7 +625,6 @@
                 updateBlockProperties(block);
             }
         });
-        // Double-click inline edit for text blocks
         if(['heading','paragraph','quote','button','badge'].includes(block.type)){
             div.addEventListener('dblclick', (e) => {
                 e.stopPropagation();
@@ -688,7 +676,6 @@
         });
     }
 
-    // Property editor for rows and columns (new)
     function updateElementProperties() {
         const container = document.getElementById('elementProperties');
         if(!selectedElement) { container.innerHTML = 'Click on a row, column, or block to edit.'; return; }
@@ -720,18 +707,15 @@
             attach('colFlex', 'flex'); attach('colBg', 'bg');
         }
         else if(selectedElement.type === 'block') {
-            // block properties are already handled by updateBlockProperties, but we call it separately
             const block = page[selectedElement.rowIdx].columns[selectedElement.colIdx].blocks[selectedElement.blockIdx];
             updateBlockProperties(block);
         }
     }
 
-    // Block property panel (full, as before, but we'll reuse the previous logic)
     function updateBlockProperties(block) {
         const panelDiv = document.getElementById('elementProperties');
         if(!block){ panelDiv.innerHTML = 'Click a block to edit.'; return; }
         let html = `<div class="property-group"><label>Block: ${block.type}</label>`;
-        // Basic blocks
         if(block.type==='heading'||block.type==='paragraph'||block.type==='quote'){
             html+=`<label>Text</label><textarea id="propText">${escapeHtml(block.text)}</textarea>`;
             if(block.type==='quote') html+=`<label>Author</label><input id="propAuthor" value="${escapeHtml(block.author)}">`;
@@ -1027,7 +1011,6 @@
         });
     }
 
-    // Export HTML (standalone)
     function exportHTML() {
         let rowsHtml = '';
         for(const row of page){
@@ -1117,8 +1100,8 @@
     // Event listeners
     document.getElementById('undoBtn').addEventListener('click', undo);
     document.getElementById('redoBtn').addEventListener('click', redo);
-    document.getElementById('saveBtn').addEventListener('click', () => { localStorage.setItem('teeheaUltimate', JSON.stringify(page)); alert('Saved'); });
-    document.getElementById('loadBtn').addEventListener('click', () => { const data = localStorage.getItem('teeheaUltimate'); if(data){ page = JSON.parse(data); saveToHistory(); renderPage(); } else alert('No save'); });
+    document.getElementById('saveBtn').addEventListener('click', () => { localStorage.setItem('teeheaProject', JSON.stringify(page)); alert('Saved'); });
+    document.getElementById('loadBtn').addEventListener('click', () => { const data = localStorage.getItem('teeheaProject'); if(data){ page = JSON.parse(data); saveToHistory(); renderPage(); } else alert('No save'); });
     document.getElementById('darkModeBtn').addEventListener('click', () => document.body.classList.toggle('dark-mode'));
     document.getElementById('templateSelect').addEventListener('change', (e) => {
         if(e.target.value==='blank') page = [];
@@ -1161,7 +1144,7 @@
     page = [createRow(2)];
     page[0].columns[0].blocks = [createBlock('heading'), createBlock('paragraph'), createBlock('buttongroup')];
     page[0].columns[1].blocks = [createBlock('button'), createBlock('modal')];
-    page[0].columns[0].blocks[0].text = 'Welcome to TeeHea Ultimate';
+    page[0].columns[0].blocks[0].text = 'Welcome to TeeHea';
     page[0].columns[0].blocks[1].text = 'Click the button group block → edit buttons in property panel. Click on row or column to adjust layout.';
     page[0].columns[0].blocks[2].buttons = [{label:'Primary', url:'#'},{label:'Secondary', url:'#'}];
     page[0].columns[1].blocks[0].label = 'Start building';
