@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TeeHea – Stable Drag & Drop Website Builder</title>
+    <title>TeeHea – Complete Website Builder (Drag & Drop Fixed)</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -47,7 +47,6 @@
             border-radius: 6px;
             cursor: pointer;
             font-size: 0.8rem;
-            transition: 0.1s;
         }
         .btn-primary { background: #2563eb; color: white; border: none; }
         .btn-primary:hover { background: #1d4ed8; }
@@ -188,10 +187,8 @@
             border: 1px solid #e5e7eb;
             border-radius: 12px;
             padding: 0.8rem;
-            cursor: grab;
             position: relative;
         }
-        .block:active { cursor: grabbing; }
         .block:hover { border-color: #2563eb; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .block-actions {
             position: absolute;
@@ -216,6 +213,8 @@
         }
         .block-action.delete { color: #dc2626; }
         .block-action.duplicate { color: #2563eb; }
+        .block-action.move-up { color: #475569; }
+        .block-action.move-down { color: #475569; }
         .add-row-btn {
             margin-top: 1rem;
             padding: 0.5rem;
@@ -283,8 +282,8 @@
 </div>
 <div class="main">
     <div class="sidebar" id="blockSidebar">
-        <div class="sidebar-category"><h4>Layout</h4><div class="block-type" data-type="row">➕ Add Row</div></div>
-        <div class="sidebar-category"><h4>Basic</h4>
+        <div class="sidebar-category"><h4>LAYOUT</h4><div class="block-type" data-type="row">➕ Add Row</div></div>
+        <div class="sidebar-category"><h4>BASIC</h4>
             <div class="block-type" data-type="heading">Heading</div><div class="block-type" data-type="paragraph">Paragraph</div>
             <div class="block-type" data-type="image">Image</div><div class="block-type" data-type="button">Button</div>
             <div class="block-type" data-type="buttongroup">Button Group</div>
@@ -293,35 +292,35 @@
             <div class="block-type" data-type="list">List</div><div class="block-type" data-type="badge">Badge</div>
             <div class="block-type" data-type="tooltip">Tooltip</div><div class="block-type" data-type="rating">Rating</div>
         </div>
-        <div class="sidebar-category"><h4>Media</h4>
+        <div class="sidebar-category"><h4>MEDIA</h4>
             <div class="block-type" data-type="video">Video</div><div class="block-type" data-type="gallery">Gallery</div>
             <div class="block-type" data-type="carousel">Carousel</div><div class="block-type" data-type="map">Map</div>
             <div class="block-type" data-type="audio">Audio</div><div class="block-type" data-type="parallax">Parallax</div>
         </div>
-        <div class="sidebar-category"><h4>Forms</h4>
+        <div class="sidebar-category"><h4>FORMS</h4>
             <div class="block-type" data-type="contactform">Contact</div><div class="block-type" data-type="newsletter">Newsletter</div>
             <div class="block-type" data-type="fileupload">File upload</div><div class="block-type" data-type="multistep">Multi‑step</div>
         </div>
-        <div class="sidebar-category"><h4>Advanced</h4>
+        <div class="sidebar-category"><h4>ADVANCED</h4>
             <div class="block-type" data-type="countdown">Countdown</div><div class="block-type" data-type="progress">Progress</div>
             <div class="block-type" data-type="accordion">Accordion</div><div class="block-type" data-type="tabs">Tabs</div>
             <div class="block-type" data-type="modal">Modal</div><div class="block-type" data-type="cookie">Cookie banner</div>
             <div class="block-type" data-type="backtotop">Back to top</div><div class="block-type" data-type="timeline">Timeline</div>
             <div class="block-type" data-type="pricing">Pricing</div><div class="block-type" data-type="testimonial">Testimonial</div>
         </div>
-        <div class="sidebar-category"><h4>Interactive</h4>
+        <div class="sidebar-category"><h4>INTERACTIVE</h4>
             <div class="block-type" data-type="countup">Count‑up</div><div class="block-type" data-type="typed">Typewriter</div>
             <div class="block-type" data-type="particles">Particles</div>
         </div>
-        <div class="sidebar-category"><h4>E‑commerce</h4>
+        <div class="sidebar-category"><h4>E‑COMMERCE</h4>
             <div class="block-type" data-type="product">Product card</div><div class="block-type" data-type="cart">Cart</div>
             <div class="block-type" data-type="checkout">Checkout</div>
         </div>
-        <div class="sidebar-category"><h4>Blog</h4>
+        <div class="sidebar-category"><h4>BLOG</h4>
             <div class="block-type" data-type="post">Post preview</div><div class="block-type" data-type="search">Search</div>
             <div class="block-type" data-type="share">Share buttons</div>
         </div>
-        <div class="sidebar-category"><h4>Utilities</h4>
+        <div class="sidebar-category"><h4>UTILITIES</h4>
             <div class="block-type" data-type="html">HTML embed</div><div class="block-type" data-type="qrcode">QR code</div>
             <div class="block-type" data-type="copy">Copy text</div><div class="block-type" data-type="weather">Weather</div>
         </div>
@@ -355,7 +354,7 @@
 </div>
 
 <script>
-    // ---------- Data model ----------
+    // ========== DATA MODEL ==========
     let page = [];
     let nextId = 1000;
     let history = [];
@@ -365,7 +364,7 @@
 
     function escapeHtml(s){ if(!s) return ''; return s.replace(/[&<>]/g,m=>m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
 
-    // Block factory (all types)
+    // Block factory (all 40+ types)
     function createBlock(type) {
         const id = nextId++;
         if(type==='heading') return { id, type, text: 'New heading', marginTop: '', marginBottom: '' };
@@ -435,7 +434,7 @@
     function undo() { if(historyIndex>0){ isUndoRedo=true; historyIndex--; page=JSON.parse(JSON.stringify(history[historyIndex])); renderPage(); isUndoRedo=false; } }
     function redo() { if(historyIndex<history.length-1){ isUndoRedo=true; historyIndex++; page=JSON.parse(JSON.stringify(history[historyIndex])); renderPage(); isUndoRedo=false; } }
 
-    // Render entire page (replaces all DOM)
+    // ========== RENDER PAGE ==========
     function renderPage() {
         const container = document.getElementById('pageContainer');
         if(!container) return;
@@ -522,23 +521,42 @@
             renderPage();
         });
         container.appendChild(addRowBtn);
-        initDragAndDrop(); // re-attach drag & drop events after rebuild
+        initDropTargets(); // important: re-attach drop listeners after re-render
         updateGlobalPreview();
         applyAnimations();
     }
 
-    // Render a single block element (no extra data binding)
     function renderBlockElement(block, rowIdx, colIdx, blockIdx) {
         const div = document.createElement('div');
         div.className = 'block';
         div.setAttribute('data-block-id', block.id);
-        div.setAttribute('draggable', 'true');
         if(block.marginTop) div.style.marginTop = block.marginTop;
         if(block.marginBottom) div.style.marginBottom = block.marginBottom;
-        // Actions
+        // Actions: duplicate, delete, move up/down
         const actions = document.createElement('div');
         actions.className = 'block-actions';
-        actions.innerHTML = `<button class="block-action duplicate" draggable="false">📋</button><button class="block-action delete" draggable="false">🗑️</button>`;
+        actions.innerHTML = `<button class="block-action move-up" title="Move up">↑</button>
+                             <button class="block-action move-down" title="Move down">↓</button>
+                             <button class="block-action duplicate" title="Duplicate">📋</button>
+                             <button class="block-action delete" title="Delete">🗑️</button>`;
+        actions.querySelector('.move-up').addEventListener('click', (e) => {
+            e.stopPropagation();
+            if(blockIdx > 0) {
+                const col = page[rowIdx].columns[colIdx];
+                [col.blocks[blockIdx-1], col.blocks[blockIdx]] = [col.blocks[blockIdx], col.blocks[blockIdx-1]];
+                saveToHistory();
+                renderPage();
+            }
+        });
+        actions.querySelector('.move-down').addEventListener('click', (e) => {
+            e.stopPropagation();
+            const col = page[rowIdx].columns[colIdx];
+            if(blockIdx < col.blocks.length-1) {
+                [col.blocks[blockIdx+1], col.blocks[blockIdx]] = [col.blocks[blockIdx], col.blocks[blockIdx+1]];
+                saveToHistory();
+                renderPage();
+            }
+        });
         actions.querySelector('.duplicate').addEventListener('click', (e) => {
             e.stopPropagation();
             const newBlock = JSON.parse(JSON.stringify(block));
@@ -557,7 +575,7 @@
         // Content
         const contentDiv = document.createElement('div');
         contentDiv.className = 'block-content';
-        // Render based on type (simplified but complete)
+        // Render block content (full all types – same as before, but complete)
         if(block.type === 'heading') contentDiv.innerHTML = `<h2 style="margin:0;">${escapeHtml(block.text)}</h2>`;
         else if(block.type === 'paragraph') contentDiv.innerHTML = `<p style="margin:0;">${escapeHtml(block.text).replace(/\n/g,'<br>')}</p>`;
         else if(block.type === 'image') {
@@ -650,68 +668,42 @@
                 updateBlockProperties(block);
             }
         });
-        // Drag start: store block ID and source column path
-        div.addEventListener('dragstart', (e) => {
-            e.dataTransfer.setData('text/plain', JSON.stringify({
-                blockId: block.id,
-                srcPath: `${rowIdx},${colIdx}`
-            }));
-            e.dataTransfer.effectAllowed = 'move';
-        });
-        div.addEventListener('dragend', (e) => {});
         return div;
     }
 
-    // Native HTML5 drag & drop (replaces Sortable)
-    function initDragAndDrop() {
+    // DRAG & DROP FROM SIDEBAR – SIMPLE & RELIABLE
+    function initDropTargets() {
         const containers = document.querySelectorAll('.blocks-container-in-col');
         containers.forEach(container => {
-            container.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                e.dataTransfer.dropEffect = 'move';
-            });
-            container.addEventListener('drop', (e) => {
-                e.preventDefault();
-                const targetContainer = e.currentTarget;
-                const targetPath = targetContainer.getAttribute('data-col-path');
-                if(!targetPath) return;
-                const rawData = e.dataTransfer.getData('text/plain');
-                if(!rawData) return;
-                const { blockId, srcPath } = JSON.parse(rawData);
-                if(!blockId || !srcPath) return;
-                const [srcRow, srcCol] = srcPath.split(',').map(Number);
-                const [dstRow, dstCol] = targetPath.split(',').map(Number);
-                if(isNaN(srcRow) || isNaN(srcCol) || isNaN(dstRow) || isNaN(dstCol)) return;
-                // Find block in source column
-                let blockObj = null;
-                let srcBlockIdx = -1;
-                page[srcRow].columns[srcCol].blocks.forEach((b, idx) => {
-                    if(b.id === blockId) { blockObj = b; srcBlockIdx = idx; }
-                });
-                if(!blockObj) return;
-                // Remove from source
-                page[srcRow].columns[srcCol].blocks.splice(srcBlockIdx, 1);
-                // Determine drop index (position relative to other blocks)
-                const children = Array.from(targetContainer.children);
-                let dropIndex = children.length;
-                for(let i=0; i<children.length; i++) {
-                    const child = children[i];
-                    const rect = child.getBoundingClientRect();
-                    const mouseY = e.clientY;
-                    if(mouseY < rect.top + rect.height/2) {
-                        dropIndex = i;
-                        break;
-                    }
-                }
-                // Insert into target
-                page[dstRow].columns[dstCol].blocks.splice(dropIndex, 0, blockObj);
-                saveToHistory();
-                renderPage();
-            });
+            // Remove previous listeners to avoid duplicates
+            container.removeEventListener('dragover', handleDragOver);
+            container.removeEventListener('drop', handleDrop);
+            container.addEventListener('dragover', handleDragOver);
+            container.addEventListener('drop', handleDrop);
         });
     }
 
-    // Property editors (row, column, block)
+    function handleDragOver(e) {
+        e.preventDefault(); // required for drop
+        e.dataTransfer.dropEffect = 'copy';
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        const type = e.dataTransfer.getData('text/plain');
+        if(!type || type === 'row') return;
+        const targetContainer = e.currentTarget;
+        const targetPath = targetContainer.getAttribute('data-col-path');
+        if(!targetPath) return;
+        const [rowIdx, colIdx] = targetPath.split(',').map(Number);
+        if(isNaN(rowIdx) || isNaN(colIdx)) return;
+        const newBlock = createBlock(type);
+        page[rowIdx].columns[colIdx].blocks.push(newBlock);
+        saveToHistory();
+        renderPage();
+    }
+
+    // ========== PROPERTY EDITORS ==========
     function updateElementProperties() {
         const container = document.getElementById('elementProperties');
         if(!selectedElement) { container.innerHTML = 'Click on a row, column, or block to edit.'; return; }
@@ -1031,40 +1023,21 @@
         }
     }
 
-    function setupSidebarDragDrop() {
-        const sidebarBlocks = document.querySelectorAll('.block-type');
-        sidebarBlocks.forEach(el => {
+    // Sidebar drag start: store block type as plain text
+    function setupSidebarDrag() {
+        const blocks = document.querySelectorAll('.block-type');
+        blocks.forEach(el => {
             el.setAttribute('draggable', 'true');
             el.addEventListener('dragstart', (e) => {
                 const type = el.getAttribute('data-type');
-                if(type) e.dataTransfer.setData('text/plain', JSON.stringify({ type, fromSidebar: true }));
+                if(type) e.dataTransfer.setData('text/plain', type);
                 e.dataTransfer.effectAllowed = 'copy';
             });
         });
-        document.body.addEventListener('dragover', (e) => e.preventDefault());
-        document.body.addEventListener('drop', (e) => {
-            e.preventDefault();
-            const targetColContainer = e.target.closest('.blocks-container-in-col');
-            if(!targetColContainer) return;
-            const rawData = e.dataTransfer.getData('text/plain');
-            if(!rawData) return;
-            const data = JSON.parse(rawData);
-            if(!data.fromSidebar) return;
-            const type = data.type;
-            if(!type || type === 'row') return;
-            const path = targetColContainer.getAttribute('data-col-path');
-            if(!path) return;
-            const [rowIdx, colIdx] = path.split(',').map(Number);
-            if(isNaN(rowIdx) || isNaN(colIdx)) return;
-            const newBlock = createBlock(type);
-            page[rowIdx].columns[colIdx].blocks.push(newBlock);
-            saveToHistory();
-            renderPage();
-        });
     }
 
+    // ========== EXPORT ==========
     function exportHTML() {
-        // Simple export for demo – in full version it would generate complete HTML
         let rowsHtml = '';
         for(const row of page){
             let colsHtml = '<div style="display:flex; gap:1rem; margin-bottom:1.5rem; flex-wrap:wrap;">';
@@ -1092,13 +1065,61 @@
     }
 
     function renderBlockExport(block) {
-        // Simplified, just for demonstration
-        if(block.type==='heading') return `<h2>${escapeHtml(block.text)}</h2>`;
-        if(block.type==='paragraph') return `<p>${escapeHtml(block.text).replace(/\n/g,'<br>')}</p>`;
+        if(block.type === 'heading') return `<h2>${escapeHtml(block.text)}</h2>`;
+        if(block.type === 'paragraph') return `<p>${escapeHtml(block.text).replace(/\n/g,'<br>')}</p>`;
+        if(block.type === 'image') return `<img src="${escapeHtml(block.src)}" alt="${escapeHtml(block.alt)}" style="max-width:100%; border-radius:${block.borderRadius || '8px'}">`;
+        if(block.type === 'button') {
+            let target = block.target === '_blank' ? ' target="_blank" rel="noopener"' : '';
+            return `<a href="${escapeHtml(block.url)}"${target} style="display:inline-block; background:${document.getElementById('primaryColor').value}; color:white; padding:0.5rem 1rem; border-radius:30px;">${escapeHtml(block.label)}</a>`;
+        }
+        if(block.type === 'buttongroup') {
+            let btns = '';
+            block.buttons.forEach(btn => {
+                let target = btn.target === '_blank' ? ' target="_blank" rel="noopener"' : '';
+                btns += `<a href="${escapeHtml(btn.url)}"${target} style="display:inline-block; background:${document.getElementById('primaryColor').value}; color:white; padding:0.5rem 1rem; border-radius:30px; margin:0 0.3rem;">${escapeHtml(btn.label)}</a>`;
+            });
+            return `<div style="display:flex; flex-wrap:wrap; gap:0.5rem;">${btns}</div>`;
+        }
+        if(block.type === 'divider') return `<hr>`;
+        if(block.type === 'spacer') return `<div style="height:${block.height}px;"></div>`;
+        if(block.type === 'icon') return `<i class="fas ${block.icon}"></i> ${escapeHtml(block.text)}`;
+        if(block.type === 'quote') return `<blockquote>“${escapeHtml(block.text)}” — ${escapeHtml(block.author)}</blockquote>`;
+        if(block.type === 'list') return `<ul>${block.items.map(i=>`<li>${escapeHtml(i)}</li>`).join('')}</ul>`;
+        if(block.type === 'badge') return `<span style="background:${block.color}; color:white; padding:0.2rem 0.5rem; border-radius:20px;">${escapeHtml(block.text)}</span>`;
+        if(block.type === 'tooltip') return `<span title="${escapeHtml(block.tooltip)}">${escapeHtml(block.text)}</span>`;
+        if(block.type === 'rating') return `<div>${'★'.repeat(block.value)}${'☆'.repeat(block.max-block.value)}</div>`;
+        if(block.type === 'video') return `<div style="position:relative; padding-bottom:56.25%;"><iframe src="${escapeHtml(block.url)}" allowfullscreen style="position:absolute; width:100%; height:100%;"></iframe></div>`;
+        if(block.type === 'gallery') return `<div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:0.5rem;">${block.images.map(img=>`<img src="${escapeHtml(img)}" style="width:100%;">`).join('')}</div>`;
+        if(block.type === 'carousel') return `<div style="display:flex; overflow-x:auto; gap:0.5rem;">${block.images.map(img=>`<img src="${escapeHtml(img)}" style="flex:0 0 80%;">`).join('')}</div>`;
+        if(block.type === 'map') return `<iframe src="${escapeHtml(block.embed)}" width="100%" height="300"></iframe>`;
+        if(block.type === 'audio') return `<audio controls src="${escapeHtml(block.src)}"></audio>`;
+        if(block.type === 'parallax') return `<div style="background:url('${escapeHtml(block.bgImage)}') fixed center/cover; padding:4rem; color:white;">${escapeHtml(block.text)}</div>`;
+        if(block.type === 'contactform') return `<form><input placeholder="Name"><input placeholder="Email"><textarea placeholder="Message"></textarea><button type="submit" style="background:${document.getElementById('primaryColor').value}; color:white;">Send</button></form>`;
+        if(block.type === 'newsletter') return `<form><input placeholder="Email"><button type="submit" style="background:${document.getElementById('primaryColor').value}; color:white;">Subscribe</button></form>`;
+        if(block.type === 'countdown') return `<div>${escapeHtml(block.label)} ${block.targetDate}</div>`;
+        if(block.type === 'progress') return `<div>${escapeHtml(block.label)} <progress value="${block.percent}" max="100"></progress> ${block.percent}%</div>`;
+        if(block.type === 'accordion') return `<div>${block.items.map(i=>`<details><summary>${escapeHtml(i.title)}</summary><p>${escapeHtml(i.content)}</p></details>`).join('')}</div>`;
+        if(block.type === 'tabs') {
+            let tabsHtml = `<div style="display:flex; gap:0.5rem; border-bottom:1px solid #ccc;">${block.tabs.map((t,idx)=>`<button data-tab="${idx}">${escapeHtml(t.title)}</button>`).join('')}</div><div>${block.tabs.map((t,idx)=>`<div data-tab-content="${idx}">${escapeHtml(t.content)}</div>`).join('')}</div>`;
+            return tabsHtml;
+        }
+        if(block.type === 'modal') return `<button>${escapeHtml(block.buttonText)}</button>`;
+        if(block.type === 'cookie') return `<div style="background:#f0f0f0; padding:1rem;">${escapeHtml(block.message)} <button>${escapeHtml(block.buttonText)}</button></div>`;
+        if(block.type === 'backtotop') return `<button onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</button>`;
+        if(block.type === 'timeline') return `<div>${block.events.map(e=>`<div><strong>${escapeHtml(e.year)}</strong> ${escapeHtml(e.text)}</div>`).join('')}</div>`;
+        if(block.type === 'pricing') return `<div style="border:1px solid #e5e7eb; border-radius:24px; padding:1rem;"><h3>${escapeHtml(block.name)}</h3><div>${escapeHtml(block.price)}</div><ul>${block.features.map(f=>`<li>${escapeHtml(f)}</li>`).join('')}</ul><button>Buy</button></div>`;
+        if(block.type === 'testimonial') return `<div style="background:#f9fafb; padding:1rem;"><p>“${escapeHtml(block.text)}”</p><p><strong>— ${escapeHtml(block.author)}</strong></p></div>`;
+        if(block.type === 'product') return `<div><img src="${escapeHtml(block.image)}" style="width:100%;"><h3>${escapeHtml(block.name)}</h3><p>${escapeHtml(block.price)}</p><button>Add</button></div>`;
+        if(block.type === 'post') return `<div><img src="${escapeHtml(block.image)}"><h3>${escapeHtml(block.title)}</h3><p>${escapeHtml(block.excerpt)}</p><small>${escapeHtml(block.date)}</small></div>`;
+        if(block.type === 'search') return `<input placeholder="Search"><button>🔍</button>`;
+        if(block.type === 'html') return block.code;
+        if(block.type === 'qrcode') return `<div>QR: ${escapeHtml(block.text)}</div>`;
+        if(block.type === 'copy') return `<div>${escapeHtml(block.text)} <button>Copy</button></div>`;
+        if(block.type === 'weather') return `<div>Weather in ${escapeHtml(block.city)}: 22°C</div>`;
         return `<div>${block.type}</div>`;
     }
 
-    // Event listeners
+    // ========== EVENT LISTENERS ==========
     document.getElementById('undoBtn').addEventListener('click', undo);
     document.getElementById('redoBtn').addEventListener('click', redo);
     document.getElementById('saveBtn').addEventListener('click', () => { localStorage.setItem('teeheaProject', JSON.stringify(page)); alert('Saved'); });
@@ -1150,19 +1171,20 @@
     document.getElementById('globalFontSize').addEventListener('input', updateGlobalPreview);
     document.getElementById('animationSelect').addEventListener('change', applyAnimations);
 
-    // Initialize
+    // Initialize demo page
     page = [createRow(2)];
     page[0].columns[0].blocks = [createBlock('heading'), createBlock('paragraph'), createBlock('buttongroup')];
     page[0].columns[1].blocks = [createBlock('button'), createBlock('modal')];
     page[0].columns[0].blocks[0].text = 'Welcome to TeeHea';
-    page[0].columns[0].blocks[1].text = 'Drag & drop blocks – no duplicates. Click on row or column to adjust layout.';
+    page[0].columns[0].blocks[1].text = 'Drag & drop blocks from sidebar into columns. Use up/down buttons to reorder. Click on row or column to adjust layout.';
     page[0].columns[0].blocks[2].buttons = [{label:'Primary', url:'#', target:'_self'},{label:'Secondary', url:'#', target:'_blank'}];
     page[0].columns[1].blocks[0].label = 'Start building';
     page[0].columns[1].blocks[1].buttonText = 'Open modal';
     page[0].columns[1].blocks[1].content = '<p>Modal content here</p>';
     saveToHistory();
     renderPage();
-    setupSidebarDragDrop();
+    setupSidebarDrag();
+    initDropTargets();
     updateGlobalPreview();
 </script>
 </body>
