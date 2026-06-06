@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TeeHea – Complete Website Builder</title>
-    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <title>TeeHea – Stable Drag & Drop Website Builder</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -20,9 +19,7 @@
         body.dark-mode { background: #0f172a; }
         body.dark-mode .toolbar, body.dark-mode .sidebar, body.dark-mode .property-panel,
         body.dark-mode .block, body.dark-mode .col, body.dark-mode .row, body.dark-mode .device-frame {
-            background: #1e293b;
-            color: #e2e8f0;
-            border-color: #334155;
+            background: #1e293b; color: #e2e8f0; border-color: #334155;
         }
         .toolbar {
             background: white;
@@ -279,16 +276,14 @@
         <button id="saveBtn" class="btn">💾 Save</button>
         <button id="loadBtn" class="btn">📂 Load</button>
         <button id="darkModeBtn" class="btn">🌙 Dark mode</button>
-        <select id="templateSelect" class="btn"><option value="">📁 Templates</option><option value="blank">Blank</option><option value="personal">Personal</option><option value="business">Business</option><option value="portfolio">Portfolio</option><option value="ecomm">E‑commerce</option></select>
+        <select id="templateSelect" class="btn"><option value="">📁 Templates</option><option value="blank">Blank</option><option value="personal">Personal</option><option value="business">Business</option><option value="portfolio">Portfolio</option><option value="ecomm">E‑commerce</option><option value="landing">Landing page</option><option value="comingsoon">Coming soon</option></select>
         <select id="deviceSelect" class="btn"><option value="desktop">💻 Desktop</option><option value="tablet">📱 Tablet</option><option value="mobile">📲 Mobile</option></select>
         <button id="exportBtn" class="btn btn-primary">⬇️ Export HTML</button>
     </div>
 </div>
 <div class="main">
     <div class="sidebar" id="blockSidebar">
-        <div class="sidebar-category"><h4>Layout</h4>
-            <div class="block-type" data-type="row">➕ Add Row</div>
-        </div>
+        <div class="sidebar-category"><h4>Layout</h4><div class="block-type" data-type="row">➕ Add Row</div></div>
         <div class="sidebar-category"><h4>Basic</h4>
             <div class="block-type" data-type="heading">Heading</div><div class="block-type" data-type="paragraph">Paragraph</div>
             <div class="block-type" data-type="image">Image</div><div class="block-type" data-type="button">Button</div>
@@ -331,7 +326,6 @@
             <div class="block-type" data-type="copy">Copy text</div><div class="block-type" data-type="weather">Weather</div>
         </div>
     </div>
-
     <div class="canvas">
         <div class="device-frame desktop" id="deviceFrame">
             <div class="site-header">
@@ -342,14 +336,14 @@
             <footer>⚡ Built with TeeHea</footer>
         </div>
     </div>
-
     <div class="property-panel" id="propertyPanel">
         <div class="property-group"><h4>Global styles</h4>
             <label>Primary color</label><input type="color" id="primaryColor" value="#2563eb" class="color-input">
             <label>Background</label><input type="color" id="bgColor" value="#ffffff" class="color-input">
             <label>Max width (px)</label><input type="number" id="maxWidth" value="1200">
             <label>Google Font</label><select id="googleFont"><option>Inter</option><option>Roboto</option><option>Open Sans</option><option>Poppins</option></select>
-            <label>Animation (scroll)</label><select id="animationSelect"><option value="none">None</option><option value="fade-up">Fade up</option></select>
+            <label>Font size</label><select id="globalFontSize"><option value="0.9rem">Small</option><option value="1rem" selected>Medium</option><option value="1.2rem">Large</option></select>
+            <label>Animation</label><select id="animationSelect"><option value="none">None</option><option value="fade-up">Fade up</option></select>
         </div>
         <div class="property-group"><h4>SEO</h4>
             <label>Meta title</label><input id="metaTitle" placeholder="Page title">
@@ -371,14 +365,14 @@
 
     function escapeHtml(s){ if(!s) return ''; return s.replace(/[&<>]/g,m=>m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
 
-    // Block factory
+    // Block factory (all types)
     function createBlock(type) {
         const id = nextId++;
-        if(type==='heading') return { id, type, text: 'New heading' };
-        if(type==='paragraph') return { id, type, text: 'Lorem ipsum dolor sit amet.' };
-        if(type==='image') return { id, type, src: 'https://picsum.photos/600/400', alt: 'image' };
-        if(type==='button') return { id, type, label: 'Button', url: '#' };
-        if(type==='buttongroup') return { id, type, buttons: [{label:'Button 1', url:'#'},{label:'Button 2', url:'#'}] };
+        if(type==='heading') return { id, type, text: 'New heading', marginTop: '', marginBottom: '' };
+        if(type==='paragraph') return { id, type, text: 'Lorem ipsum dolor sit amet.', marginTop: '', marginBottom: '' };
+        if(type==='image') return { id, type, src: 'https://picsum.photos/600/400', alt: 'image', borderRadius: '8px', boxShadow: '' };
+        if(type==='button') return { id, type, label: 'Button', url: '#', target: '_self', marginTop: '', marginBottom: '' };
+        if(type==='buttongroup') return { id, type, buttons: [{label:'Button 1', url:'#', target:'_self'},{label:'Button 2', url:'#', target:'_self'}] };
         if(type==='divider') return { id, type };
         if(type==='spacer') return { id, type, height: 40 };
         if(type==='icon') return { id, type, icon: 'fa-star', text: 'Icon' };
@@ -397,7 +391,7 @@
         if(type==='newsletter') return { id, type };
         if(type==='fileupload') return { id, type };
         if(type==='multistep') return { id, type, steps: ['Step 1','Step 2'] };
-        if(type==='countdown') return { id, type, targetDate: '2025-12-31', label: 'Event' };
+        if(type==='countdown') return { id, type, targetDate: new Date(Date.now() + 7*86400000).toISOString().slice(0,10), label: 'Event starts in' };
         if(type==='progress') return { id, type, percent: 75, label: 'Skill' };
         if(type==='accordion') return { id, type, items: [{title:'Section',content:'Content'}] };
         if(type==='tabs') return { id, type, tabs: [{title:'Tab1',content:'Content1'}] };
@@ -417,7 +411,7 @@
         if(type==='search') return { id, type };
         if(type==='share') return { id, type, url: 'https://example.com' };
         if(type==='html') return { id, type, code: '<div>Custom HTML</div>' };
-        if(type==='qrcode') return { id, type, text: 'https://teehea.github.io' };
+        if(type==='qrcode') return { id, type, text: 'https://teehea.com' };
         if(type==='copy') return { id, type, text: 'Copy this text' };
         if(type==='weather') return { id, type, city: 'London' };
         return { id, type, text: 'New block' };
@@ -441,6 +435,7 @@
     function undo() { if(historyIndex>0){ isUndoRedo=true; historyIndex--; page=JSON.parse(JSON.stringify(history[historyIndex])); renderPage(); isUndoRedo=false; } }
     function redo() { if(historyIndex<history.length-1){ isUndoRedo=true; historyIndex++; page=JSON.parse(JSON.stringify(history[historyIndex])); renderPage(); isUndoRedo=false; } }
 
+    // Render entire page (replaces all DOM)
     function renderPage() {
         const container = document.getElementById('pageContainer');
         if(!container) return;
@@ -454,7 +449,6 @@
             page.forEach((row, rowIdx) => {
                 const rowDiv = document.createElement('div');
                 rowDiv.className = 'row';
-                rowDiv.setAttribute('data-row-id', row.id);
                 rowDiv.setAttribute('data-row-idx', rowIdx);
                 if(row.style.bg) rowDiv.style.backgroundColor = row.style.bg;
                 if(row.style.minHeight) rowDiv.style.minHeight = row.style.minHeight;
@@ -486,7 +480,6 @@
                 row.columns.forEach((col, colIdx) => {
                     const colDiv = document.createElement('div');
                     colDiv.className = 'col';
-                    colDiv.setAttribute('data-col-id', col.id);
                     colDiv.setAttribute('data-col-path', `${rowIdx},${colIdx}`);
                     if(col.style && col.style.flex) colDiv.style.flex = col.style.flex;
                     if(col.style && col.style.bg) colDiv.style.backgroundColor = col.style.bg;
@@ -529,18 +522,23 @@
             renderPage();
         });
         container.appendChild(addRowBtn);
-        initSortable();
+        initDragAndDrop(); // re-attach drag & drop events after rebuild
         updateGlobalPreview();
         applyAnimations();
     }
 
+    // Render a single block element (no extra data binding)
     function renderBlockElement(block, rowIdx, colIdx, blockIdx) {
         const div = document.createElement('div');
         div.className = 'block';
         div.setAttribute('data-block-id', block.id);
+        div.setAttribute('draggable', 'true');
+        if(block.marginTop) div.style.marginTop = block.marginTop;
+        if(block.marginBottom) div.style.marginBottom = block.marginBottom;
+        // Actions
         const actions = document.createElement('div');
         actions.className = 'block-actions';
-        actions.innerHTML = `<button class="block-action duplicate">📋</button><button class="block-action delete">🗑️</button>`;
+        actions.innerHTML = `<button class="block-action duplicate" draggable="false">📋</button><button class="block-action delete" draggable="false">🗑️</button>`;
         actions.querySelector('.duplicate').addEventListener('click', (e) => {
             e.stopPropagation();
             const newBlock = JSON.parse(JSON.stringify(block));
@@ -556,16 +554,26 @@
             renderPage();
         });
         div.appendChild(actions);
+        // Content
         const contentDiv = document.createElement('div');
         contentDiv.className = 'block-content';
+        // Render based on type (simplified but complete)
         if(block.type === 'heading') contentDiv.innerHTML = `<h2 style="margin:0;">${escapeHtml(block.text)}</h2>`;
         else if(block.type === 'paragraph') contentDiv.innerHTML = `<p style="margin:0;">${escapeHtml(block.text).replace(/\n/g,'<br>')}</p>`;
-        else if(block.type === 'image') contentDiv.innerHTML = `<img src="${escapeHtml(block.src)}" alt="${escapeHtml(block.alt)}" style="max-width:100%; border-radius:8px;">`;
-        else if(block.type === 'button') contentDiv.innerHTML = `<a href="${escapeHtml(block.url)}" style="display:inline-block; background:var(--primary,#2563eb); color:white; padding:0.5rem 1rem; border-radius:30px;">${escapeHtml(block.label)}</a>`;
+        else if(block.type === 'image') {
+            let imgStyle = `max-width:100%; border-radius:${block.borderRadius || '8px'}`;
+            if(block.boxShadow) imgStyle += `; box-shadow:${block.boxShadow}`;
+            contentDiv.innerHTML = `<img src="${escapeHtml(block.src)}" alt="${escapeHtml(block.alt)}" style="${imgStyle}">`;
+        }
+        else if(block.type === 'button') {
+            let target = block.target === '_blank' ? ' target="_blank" rel="noopener"' : '';
+            contentDiv.innerHTML = `<a href="${escapeHtml(block.url)}"${target} style="display:inline-block; background:var(--primary,#2563eb); color:white; padding:0.5rem 1rem; border-radius:30px;">${escapeHtml(block.label)}</a>`;
+        }
         else if(block.type === 'buttongroup') {
             let btns = '';
             block.buttons.forEach(btn => {
-                btns += `<a href="${escapeHtml(btn.url)}" style="display:inline-block; background:var(--primary,#2563eb); color:white; padding:0.5rem 1rem; border-radius:30px; margin:0 0.3rem;">${escapeHtml(btn.label)}</a>`;
+                let target = btn.target === '_blank' ? ' target="_blank" rel="noopener"' : '';
+                btns += `<a href="${escapeHtml(btn.url)}"${target} style="display:inline-block; background:var(--primary,#2563eb); color:white; padding:0.5rem 1rem; border-radius:30px; margin:0 0.3rem;">${escapeHtml(btn.label)}</a>`;
             });
             contentDiv.innerHTML = `<div style="display:flex; flex-wrap:wrap; gap:0.5rem;">${btns}</div>`;
         }
@@ -583,11 +591,28 @@
         else if(block.type === 'map') contentDiv.innerHTML = `<iframe src="${escapeHtml(block.embed)}" width="100%" height="300"></iframe>`;
         else if(block.type === 'audio') contentDiv.innerHTML = `<audio controls src="${escapeHtml(block.src)}"></audio>`;
         else if(block.type === 'parallax') contentDiv.innerHTML = `<div style="background:url('${escapeHtml(block.bgImage)}') fixed center/cover; padding:4rem; color:white;">${escapeHtml(block.text)}</div>`;
-        else if(block.type === 'contactform') contentDiv.innerHTML = `<form><input placeholder="Name"><input placeholder="Email"><textarea placeholder="Message"></textarea><button type="button" style="background:var(--primary,#2563eb); color:white;">Send</button></form>`;
-        else if(block.type === 'newsletter') contentDiv.innerHTML = `<form><input placeholder="Email"><button style="background:var(--primary,#2563eb);">Subscribe</button></form>`;
+        else if(block.type === 'contactform') contentDiv.innerHTML = `<form onsubmit="alert('Demo: message sent'); return false;"><input placeholder="Name"><input placeholder="Email"><textarea placeholder="Message"></textarea><button type="submit" style="background:var(--primary,#2563eb); color:white;">Send</button></form>`;
+        else if(block.type === 'newsletter') contentDiv.innerHTML = `<form onsubmit="alert('Demo: subscribed'); return false;"><input placeholder="Email"><button type="submit" style="background:var(--primary,#2563eb);">Subscribe</button></form>`;
         else if(block.type === 'fileupload') contentDiv.innerHTML = `<input type="file">`;
         else if(block.type === 'multistep') contentDiv.innerHTML = `<div>Multi-step form: ${block.steps.join(' → ')}</div>`;
-        else if(block.type === 'countdown') contentDiv.innerHTML = `<div>${escapeHtml(block.label)} <span>${block.targetDate}</span></div>`;
+        else if(block.type === 'countdown') {
+            const targetDate = new Date(block.targetDate).getTime();
+            const update = () => {
+                const now = new Date().getTime();
+                const diff = Math.max(0, targetDate - now);
+                const days = Math.floor(diff / (1000*60*60*24));
+                const hours = Math.floor((diff % (86400000)) / 3600000);
+                const mins = Math.floor((diff % 3600000) / 60000);
+                const secs = Math.floor((diff % 60000) / 1000);
+                const span = contentDiv.querySelector('.countdown-display');
+                if(span) span.innerText = `${days}d ${hours}h ${mins}m ${secs}s`;
+                if(diff <= 0) clearInterval(interval);
+            };
+            contentDiv.innerHTML = `<div>${escapeHtml(block.label)} <span class="countdown-display"></span></div>`;
+            const interval = setInterval(update, 1000);
+            update();
+            div._countdownInterval = interval;
+        }
         else if(block.type === 'progress') contentDiv.innerHTML = `<div>${escapeHtml(block.label)} <progress value="${block.percent}" max="100"></progress> ${block.percent}%</div>`;
         else if(block.type === 'accordion') contentDiv.innerHTML = `<div>${block.items.map(i=>`<details><summary>${escapeHtml(i.title)}</summary><p>${escapeHtml(i.content)}</p></details>`).join('')}</div>`;
         else if(block.type === 'tabs') {
@@ -625,57 +650,68 @@
                 updateBlockProperties(block);
             }
         });
-        if(['heading','paragraph','quote','button','badge'].includes(block.type)){
-            div.addEventListener('dblclick', (e) => {
-                e.stopPropagation();
-                let newVal = prompt('Edit:', block.text || block.label);
-                if(newVal){
-                    if(block.type==='heading'||block.type==='paragraph'||block.type==='quote') block.text = newVal;
-                    else if(block.type==='button') block.label = newVal;
-                    else if(block.type==='badge') block.text = newVal;
-                    saveToHistory();
-                    renderPage();
-                }
-            });
-        }
+        // Drag start: store block ID and source column path
+        div.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', JSON.stringify({
+                blockId: block.id,
+                srcPath: `${rowIdx},${colIdx}`
+            }));
+            e.dataTransfer.effectAllowed = 'move';
+        });
+        div.addEventListener('dragend', (e) => {});
         return div;
     }
 
-    function initSortable() {
-        if(window.sortableInstances) window.sortableInstances.forEach(s=>s.destroy());
-        window.sortableInstances = [];
-        const colContainers = document.querySelectorAll('.blocks-container-in-col');
-        colContainers.forEach(container => {
-            const sortable = new Sortable(container, {
-                group: { name: 'blocks', pull: true, revertClone: false },
-                animation: 200,
-                handle: '.block',
-                draggable: '.block',
-                onEnd: (evt) => {
-                    const srcContainer = evt.from;
-                    const dstContainer = evt.to;
-                    const srcPath = srcContainer.getAttribute('data-col-path');
-                    const dstPath = dstContainer.getAttribute('data-col-path');
-                    if(!srcPath || !dstPath) return;
-                    const [srcRow, srcCol] = srcPath.split(',').map(Number);
-                    const [dstRow, dstCol] = dstPath.split(',').map(Number);
-                    const srcBlockId = parseInt(evt.item.getAttribute('data-block-id'));
-                    let blockObj = null, srcBlockIdx = -1;
-                    page[srcRow].columns[srcCol].blocks.forEach((b,idx) => { if(b.id===srcBlockId){ blockObj=b; srcBlockIdx=idx; } });
-                    if(blockObj && srcBlockIdx!==-1){
-                        page[srcRow].columns[srcCol].blocks.splice(srcBlockIdx,1);
-                        const dstChildren = Array.from(dstContainer.children);
-                        const newIndex = dstChildren.findIndex(child => child.getAttribute('data-block-id') === evt.item.getAttribute('data-block-id'));
-                        page[dstRow].columns[dstCol].blocks.splice(newIndex, 0, blockObj);
-                        saveToHistory();
-                        renderPage();
+    // Native HTML5 drag & drop (replaces Sortable)
+    function initDragAndDrop() {
+        const containers = document.querySelectorAll('.blocks-container-in-col');
+        containers.forEach(container => {
+            container.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+            });
+            container.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const targetContainer = e.currentTarget;
+                const targetPath = targetContainer.getAttribute('data-col-path');
+                if(!targetPath) return;
+                const rawData = e.dataTransfer.getData('text/plain');
+                if(!rawData) return;
+                const { blockId, srcPath } = JSON.parse(rawData);
+                if(!blockId || !srcPath) return;
+                const [srcRow, srcCol] = srcPath.split(',').map(Number);
+                const [dstRow, dstCol] = targetPath.split(',').map(Number);
+                if(isNaN(srcRow) || isNaN(srcCol) || isNaN(dstRow) || isNaN(dstCol)) return;
+                // Find block in source column
+                let blockObj = null;
+                let srcBlockIdx = -1;
+                page[srcRow].columns[srcCol].blocks.forEach((b, idx) => {
+                    if(b.id === blockId) { blockObj = b; srcBlockIdx = idx; }
+                });
+                if(!blockObj) return;
+                // Remove from source
+                page[srcRow].columns[srcCol].blocks.splice(srcBlockIdx, 1);
+                // Determine drop index (position relative to other blocks)
+                const children = Array.from(targetContainer.children);
+                let dropIndex = children.length;
+                for(let i=0; i<children.length; i++) {
+                    const child = children[i];
+                    const rect = child.getBoundingClientRect();
+                    const mouseY = e.clientY;
+                    if(mouseY < rect.top + rect.height/2) {
+                        dropIndex = i;
+                        break;
                     }
                 }
+                // Insert into target
+                page[dstRow].columns[dstCol].blocks.splice(dropIndex, 0, blockObj);
+                saveToHistory();
+                renderPage();
             });
-            window.sortableInstances.push(sortable);
         });
     }
 
+    // Property editors (row, column, block)
     function updateElementProperties() {
         const container = document.getElementById('elementProperties');
         if(!selectedElement) { container.innerHTML = 'Click on a row, column, or block to edit.'; return; }
@@ -716,18 +752,20 @@
         const panelDiv = document.getElementById('elementProperties');
         if(!block){ panelDiv.innerHTML = 'Click a block to edit.'; return; }
         let html = `<div class="property-group"><label>Block: ${block.type}</label>`;
+        html += `<label>Margin top</label><input type="text" id="marginTop" placeholder="0" value="${block.marginTop || ''}">
+                 <label>Margin bottom</label><input type="text" id="marginBottom" placeholder="0" value="${block.marginBottom || ''}">`;
         if(block.type==='heading'||block.type==='paragraph'||block.type==='quote'){
             html+=`<label>Text</label><textarea id="propText">${escapeHtml(block.text)}</textarea>`;
             if(block.type==='quote') html+=`<label>Author</label><input id="propAuthor" value="${escapeHtml(block.author)}">`;
         }
         else if(block.type==='image'){
-            html+=`<label>Image URL</label><input id="propSrc" value="${escapeHtml(block.src)}"><label>Alt</label><input id="propAlt" value="${escapeHtml(block.alt)}">`;
+            html+=`<label>Image URL</label><input id="propSrc" value="${escapeHtml(block.src)}"><label>Alt</label><input id="propAlt" value="${escapeHtml(block.alt)}"><label>Border radius</label><input id="imgRadius" value="${block.borderRadius || '8px'}"><label>Box shadow</label><input id="imgShadow" placeholder="0 0 10px rgba(0,0,0,0.1)" value="${block.boxShadow || ''}">`;
         }
         else if(block.type==='button'){
-            html+=`<label>Label</label><input id="propLabel" value="${escapeHtml(block.label)}"><label>URL</label><input id="propUrl" value="${escapeHtml(block.url)}">`;
+            html+=`<label>Label</label><input id="propLabel" value="${escapeHtml(block.label)}"><label>URL</label><input id="propUrl" value="${escapeHtml(block.url)}"><label>Open in new tab</label><select id="propTarget"><option value="_self" ${block.target!=='_blank'?'selected':''}>Same tab</option><option value="_blank" ${block.target==='_blank'?'selected':''}>New tab</option></select>`;
         }
         else if(block.type==='buttongroup'){
-            html+=`<label>Buttons (label:url, one per line)</label><textarea id="propButtonGroup">${block.buttons.map(b=>`${b.label}:${b.url}`).join('\n')}</textarea>`;
+            html+=`<label>Buttons (label:url:target, one per line)</label><textarea id="propButtonGroup">${block.buttons.map(b=>`${b.label}:${b.url}:${b.target||'_self'}`).join('\n')}</textarea>`;
         }
         else if(block.type==='spacer'){
             html+=`<label>Height (px)</label><input id="propHeight" type="number" value="${block.height}">`;
@@ -826,6 +864,8 @@
         panelDiv.innerHTML = html;
         const attach = (id, handler) => { const el = document.getElementById(id); if(el) el.addEventListener('input', handler); };
         const updateAndSave = () => { saveToHistory(); renderPage(); };
+        attach('marginTop', () => { block.marginTop = document.getElementById('marginTop').value; updateAndSave(); });
+        attach('marginBottom', () => { block.marginBottom = document.getElementById('marginBottom').value; updateAndSave(); });
         if(block.type==='heading'||block.type==='paragraph'||block.type==='quote'){
             attach('propText', () => { block.text = document.getElementById('propText').value; updateAndSave(); });
             if(block.type==='quote') attach('propAuthor', () => { block.author = document.getElementById('propAuthor').value; updateAndSave(); });
@@ -833,15 +873,21 @@
         else if(block.type==='image'){
             attach('propSrc', () => { block.src = document.getElementById('propSrc').value; updateAndSave(); });
             attach('propAlt', () => { block.alt = document.getElementById('propAlt').value; updateAndSave(); });
+            attach('imgRadius', () => { block.borderRadius = document.getElementById('imgRadius').value; updateAndSave(); });
+            attach('imgShadow', () => { block.boxShadow = document.getElementById('imgShadow').value; updateAndSave(); });
         }
         else if(block.type==='button'){
             attach('propLabel', () => { block.label = document.getElementById('propLabel').value; updateAndSave(); });
             attach('propUrl', () => { block.url = document.getElementById('propUrl').value; updateAndSave(); });
+            attach('propTarget', () => { block.target = document.getElementById('propTarget').value; updateAndSave(); });
         }
         else if(block.type==='buttongroup'){
             attach('propButtonGroup', () => {
                 const lines = document.getElementById('propButtonGroup').value.split('\n').filter(l=>l.trim());
-                block.buttons = lines.map(l=>{ let [label,url]=l.split(':'); return {label:label||'Button', url:url||'#'}; });
+                block.buttons = lines.map(l=>{
+                    let parts = l.split(':');
+                    return { label: parts[0]||'Button', url: parts[1]||'#', target: parts[2]||'_self' };
+                });
                 updateAndSave();
             });
         }
@@ -969,9 +1015,11 @@
         const primary = document.getElementById('primaryColor').value;
         const bg = document.getElementById('bgColor').value;
         const maxWidth = document.getElementById('maxWidth').value;
+        const fontSize = document.getElementById('globalFontSize').value;
         document.documentElement.style.setProperty('--primary', primary);
         document.getElementById('deviceFrame').style.backgroundColor = bg;
         document.getElementById('deviceFrame').style.maxWidth = maxWidth + 'px';
+        document.getElementById('deviceFrame').style.fontSize = fontSize;
         const title = document.querySelector('.site-title');
         if(title) title.style.color = primary;
     }
@@ -989,7 +1037,7 @@
             el.setAttribute('draggable', 'true');
             el.addEventListener('dragstart', (e) => {
                 const type = el.getAttribute('data-type');
-                if(type) e.dataTransfer.setData('text/plain', type);
+                if(type) e.dataTransfer.setData('text/plain', JSON.stringify({ type, fromSidebar: true }));
                 e.dataTransfer.effectAllowed = 'copy';
             });
         });
@@ -998,7 +1046,11 @@
             e.preventDefault();
             const targetColContainer = e.target.closest('.blocks-container-in-col');
             if(!targetColContainer) return;
-            const type = e.dataTransfer.getData('text/plain');
+            const rawData = e.dataTransfer.getData('text/plain');
+            if(!rawData) return;
+            const data = JSON.parse(rawData);
+            if(!data.fromSidebar) return;
+            const type = data.type;
             if(!type || type === 'row') return;
             const path = targetColContainer.getAttribute('data-col-path');
             if(!path) return;
@@ -1012,6 +1064,7 @@
     }
 
     function exportHTML() {
+        // Simple export for demo – in full version it would generate complete HTML
         let rowsHtml = '';
         for(const row of page){
             let colsHtml = '<div style="display:flex; gap:1rem; margin-bottom:1.5rem; flex-wrap:wrap;">';
@@ -1039,61 +1092,9 @@
     }
 
     function renderBlockExport(block) {
+        // Simplified, just for demonstration
         if(block.type==='heading') return `<h2>${escapeHtml(block.text)}</h2>`;
         if(block.type==='paragraph') return `<p>${escapeHtml(block.text).replace(/\n/g,'<br>')}</p>`;
-        if(block.type==='image') return `<img src="${escapeHtml(block.src)}" alt="${escapeHtml(block.alt)}" style="max-width:100%;">`;
-        if(block.type==='button') return `<a href="${escapeHtml(block.url)}" style="display:inline-block; background:${document.getElementById('primaryColor').value}; color:white; padding:0.5rem 1rem; border-radius:30px;">${escapeHtml(block.label)}</a>`;
-        if(block.type==='buttongroup') {
-            let btns = '';
-            block.buttons.forEach(btn => {
-                btns += `<a href="${escapeHtml(btn.url)}" style="display:inline-block; background:${document.getElementById('primaryColor').value}; color:white; padding:0.5rem 1rem; border-radius:30px; margin:0 0.3rem;">${escapeHtml(btn.label)}</a>`;
-            });
-            return `<div style="display:flex; flex-wrap:wrap; gap:0.5rem;">${btns}</div>`;
-        }
-        if(block.type==='divider') return `<hr>`;
-        if(block.type==='spacer') return `<div style="height:${block.height}px;"></div>`;
-        if(block.type==='icon') return `<i class="fas ${block.icon}"></i> ${escapeHtml(block.text)}`;
-        if(block.type==='quote') return `<blockquote>“${escapeHtml(block.text)}” — ${escapeHtml(block.author)}</blockquote>`;
-        if(block.type==='list') return `<ul>${block.items.map(i=>`<li>${escapeHtml(i)}</li>`).join('')}</ul>`;
-        if(block.type==='badge') return `<span style="background:${block.color}; color:white; padding:0.2rem 0.5rem; border-radius:20px;">${escapeHtml(block.text)}</span>`;
-        if(block.type==='tooltip') return `<span title="${escapeHtml(block.tooltip)}">${escapeHtml(block.text)}</span>`;
-        if(block.type==='rating') return `<div>${'★'.repeat(block.value)}${'☆'.repeat(block.max-block.value)}</div>`;
-        if(block.type==='video') return `<div style="position:relative; padding-bottom:56.25%;"><iframe src="${escapeHtml(block.url)}" allowfullscreen style="position:absolute; width:100%; height:100%;"></iframe></div>`;
-        if(block.type==='gallery') return `<div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:0.5rem;">${block.images.map(img=>`<img src="${escapeHtml(img)}" style="width:100%;">`).join('')}</div>`;
-        if(block.type==='carousel') return `<div style="display:flex; overflow-x:auto;">${block.images.map(img=>`<img src="${escapeHtml(img)}" style="flex:0 0 80%;">`).join('')}</div>`;
-        if(block.type==='map') return `<iframe src="${escapeHtml(block.embed)}" width="100%" height="300"></iframe>`;
-        if(block.type==='audio') return `<audio controls src="${escapeHtml(block.src)}"></audio>`;
-        if(block.type==='parallax') return `<div style="background:url('${escapeHtml(block.bgImage)}') fixed center/cover; padding:4rem; color:white;">${escapeHtml(block.text)}</div>`;
-        if(block.type==='contactform') return `<form><input placeholder="Name"><input placeholder="Email"><textarea placeholder="Message"></textarea><button type="button">Send</button></form>`;
-        if(block.type==='newsletter') return `<form><input placeholder="Email"><button>Subscribe</button></form>`;
-        if(block.type==='fileupload') return `<input type="file">`;
-        if(block.type==='multistep') return `<div>Multi-step: ${block.steps.join(' → ')}</div>`;
-        if(block.type==='countdown') return `<div>${escapeHtml(block.label)} ${block.targetDate}</div>`;
-        if(block.type==='progress') return `<div>${escapeHtml(block.label)} <progress value="${block.percent}" max="100"></progress> ${block.percent}%</div>`;
-        if(block.type==='accordion') return `<div>${block.items.map(i=>`<details><summary>${escapeHtml(i.title)}</summary><p>${escapeHtml(i.content)}</p></details>`).join('')}</div>`;
-        if(block.type==='tabs') {
-            let tabsHtml = `<div style="display:flex; gap:0.5rem; border-bottom:1px solid #ccc;">${block.tabs.map((t,idx)=>`<button data-tab="${idx}">${escapeHtml(t.title)}</button>`).join('')}</div><div>${block.tabs.map((t,idx)=>`<div data-tab-content="${idx}" style="display:${idx===0?'block':'none'}">${escapeHtml(t.content)}</div>`).join('')}</div>`;
-            return tabsHtml;
-        }
-        if(block.type==='modal') return `<button>${escapeHtml(block.buttonText)}</button>`;
-        if(block.type==='cookie') return `<div style="background:#f0f0f0; padding:1rem;">${escapeHtml(block.message)} <button>${escapeHtml(block.buttonText)}</button></div>`;
-        if(block.type==='backtotop') return `<button onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</button>`;
-        if(block.type==='timeline') return `<div>${block.events.map(e=>`<div><strong>${escapeHtml(e.year)}</strong> ${escapeHtml(e.text)}</div>`).join('')}</div>`;
-        if(block.type==='pricing') return `<div style="border:1px solid #e5e7eb; border-radius:24px; padding:1rem;"><h3>${escapeHtml(block.name)}</h3><div>${escapeHtml(block.price)}</div><ul>${block.features.map(f=>`<li>${escapeHtml(f)}</li>`).join('')}</ul><button>Buy</button></div>`;
-        if(block.type==='testimonial') return `<div style="background:#f9fafb; padding:1rem;"><p>“${escapeHtml(block.text)}”</p><p><strong>— ${escapeHtml(block.author)}</strong></p></div>`;
-        if(block.type==='countup') return `<div>0 ${escapeHtml(block.label)}</div>`;
-        if(block.type==='typed') return `<div>Typewriter effect</div>`;
-        if(block.type==='particles') return `<canvas style="height:200px; background:#f0f0f0;"></canvas>`;
-        if(block.type==='product') return `<div><img src="${escapeHtml(block.image)}" style="width:100%;"><h3>${escapeHtml(block.name)}</h3><p>${escapeHtml(block.price)}</p><button>Add</button></div>`;
-        if(block.type==='cart') return `<div>Cart (0 items)</div>`;
-        if(block.type==='checkout') return `<button>Checkout</button>`;
-        if(block.type==='post') return `<div><img src="${escapeHtml(block.image)}"><h3>${escapeHtml(block.title)}</h3><p>${escapeHtml(block.excerpt)}</p><small>${escapeHtml(block.date)}</small></div>`;
-        if(block.type==='search') return `<input placeholder="Search"><button>🔍</button>`;
-        if(block.type==='share') return `<div>Share: <a href="#">Twitter</a></div>`;
-        if(block.type==='html') return block.code;
-        if(block.type==='qrcode') return `<div>QR: ${escapeHtml(block.text)}</div>`;
-        if(block.type==='copy') return `<div>${escapeHtml(block.text)} <button>Copy</button></div>`;
-        if(block.type==='weather') return `<div>Weather in ${escapeHtml(block.city)}: 22°C</div>`;
         return `<div>${block.type}</div>`;
     }
 
@@ -1125,6 +1126,14 @@
             row.columns[0].blocks = [createBlock('product'), createBlock('product')];
             row.columns[1].blocks = [createBlock('cart'), createBlock('checkout')];
             page = [row];
+        } else if(e.target.value==='landing') {
+            const row = createRow(1);
+            row.columns[0].blocks = [createBlock('heading'), createBlock('paragraph'), createBlock('button'), createBlock('countdown')];
+            page = [row];
+        } else if(e.target.value==='comingsoon') {
+            const row = createRow(1);
+            row.columns[0].blocks = [createBlock('heading'), createBlock('paragraph'), createBlock('countdown'), createBlock('newsletter')];
+            page = [row];
         }
         saveToHistory(); renderPage(); e.target.value='';
     });
@@ -1138,15 +1147,16 @@
     document.getElementById('primaryColor').addEventListener('input', () => { updateGlobalPreview(); renderPage(); });
     document.getElementById('bgColor').addEventListener('input', updateGlobalPreview);
     document.getElementById('maxWidth').addEventListener('input', updateGlobalPreview);
+    document.getElementById('globalFontSize').addEventListener('input', updateGlobalPreview);
     document.getElementById('animationSelect').addEventListener('change', applyAnimations);
 
-    // Initialize demo
+    // Initialize
     page = [createRow(2)];
     page[0].columns[0].blocks = [createBlock('heading'), createBlock('paragraph'), createBlock('buttongroup')];
     page[0].columns[1].blocks = [createBlock('button'), createBlock('modal')];
     page[0].columns[0].blocks[0].text = 'Welcome to TeeHea';
-    page[0].columns[0].blocks[1].text = 'Click the button group block → edit buttons in property panel. Click on row or column to adjust layout.';
-    page[0].columns[0].blocks[2].buttons = [{label:'Primary', url:'#'},{label:'Secondary', url:'#'}];
+    page[0].columns[0].blocks[1].text = 'Drag & drop blocks – no duplicates. Click on row or column to adjust layout.';
+    page[0].columns[0].blocks[2].buttons = [{label:'Primary', url:'#', target:'_self'},{label:'Secondary', url:'#', target:'_blank'}];
     page[0].columns[1].blocks[0].label = 'Start building';
     page[0].columns[1].blocks[1].buttonText = 'Open modal';
     page[0].columns[1].blocks[1].content = '<p>Modal content here</p>';
