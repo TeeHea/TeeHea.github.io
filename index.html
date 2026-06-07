@@ -3,1122 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TeeHea – Website Builder</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>TeeHea – Service Shutdown</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ========== TEeHea BUILDER CSS ========== */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Inter', sans-serif;
-            background: #f1f5f9;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        body.dark-mode { background: #0f172a; }
-        body.dark-mode .toolbar, body.dark-mode .sidebar, body.dark-mode .property-panel,
-        body.dark-mode .block, body.dark-mode .col, body.dark-mode .row, body.dark-mode .device-frame {
-            background: #1e293b; color: #e2e8f0; border-color: #334155;
-        }
-
-        /* Cease operations banner */
-        .cease-banner {
-            background-color: #dc2626;
-            color: white;
-            text-align: center;
-            padding: 0.8rem 1rem;
-            font-family: 'Inter', sans-serif;
-            border-bottom: 2px solid #b91c1c;
-            flex-shrink: 0;
-        }
-        .cease-banner p { margin: 0; font-size: 0.9rem; font-weight: 600; }
-        .cease-banner small { display: block; margin-top: 0.3rem; font-size: 0.7rem; opacity: 0.9; }
-
-        .toolbar {
-            background: white;
-            border-bottom: 1px solid #e2e8f0;
-            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+            min-height: 100vh;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            z-index: 10;
+            justify-content: center;
+            padding: 1rem;
         }
+
+        .shutdown-card {
+            max-width: 550px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+
+        .shutdown-card:hover {
+            transform: scale(1.01);
+        }
+
+        .header {
+            background: #1e293b;
+            padding: 2rem 1.5rem;
+            color: white;
+        }
+
         .logo {
+            font-size: 2rem;
             font-weight: 800;
-            font-size: 1.4rem;
-            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            background: linear-gradient(135deg, #e2e8f0, #94a3b8);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
+            letter-spacing: -0.5px;
         }
-        .btn {
-            background: #f1f5f9;
-            border: 1px solid #cbd5e1;
-            padding: 0.4rem 0.8rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.8rem;
-            transition: 0.1s;
-        }
-        .btn-primary { background: #2563eb; color: white; border: none; }
-        .btn-primary:hover { background: #1d4ed8; }
-        .btn-group { display: flex; gap: 0.4rem; flex-wrap: wrap; }
 
-        .main { display: flex; flex: 1; overflow: hidden; }
-        .sidebar {
-            width: 320px;
-            background: #f8fafc;
-            border-right: 1px solid #e2e8f0;
-            overflow-y: auto;
-            padding: 1rem;
-        }
-        .sidebar-category h4 {
-            font-size: 0.7rem;
+        .status-badge {
+            display: inline-block;
+            background: #dc2626;
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 1rem;
             text-transform: uppercase;
-            color: #475569;
-            margin: 1rem 0 0.5rem;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
-        .block-type {
-            background: white;
+
+        .content {
+            padding: 2rem 2rem 1.8rem;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.75rem;
+        }
+
+        .message {
+            color: #334155;
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+
+        .details {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 1.2rem;
+            text-align: left;
+            margin: 1.5rem 0;
             border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 0.5rem;
-            margin-bottom: 0.4rem;
-            font-size: 0.8rem;
+        }
+
+        .details p {
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            color: #475569;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            cursor: grab;
-            user-select: none;
         }
-        .block-type:active { cursor: grabbing; }
-        .block-type:hover { background: #eef2ff; border-color: #2563eb; }
 
-        .canvas {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1.5rem;
-            background: #e2e8f0;
+        .details i {
+            width: 20px;
+            color: #64748b;
         }
-        .device-frame {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 24px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
-            overflow: hidden;
-            transition: max-width 0.2s;
-        }
-        .device-frame.tablet { max-width: 768px; }
-        .device-frame.mobile { max-width: 480px; }
 
-        .site-header {
-            background: inherit;
-            border-bottom: 1px solid #e5e7eb;
-            padding: 1.5rem 2rem;
-            text-align: center;
-        }
-        .site-title[contenteditable="true"]:hover,
-        .site-tagline[contenteditable="true"]:hover {
-            background: #fef9c3;
-            cursor: text;
-        }
-        .page-container { padding: 2rem; }
-
-        .row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            background: rgba(0,0,0,0.02);
-            border: 1px dashed #cbd5e1;
-            border-radius: 12px;
-            padding: 1rem;
-            position: relative;
-            transition: all 0.2s;
-        }
-        .row:hover { border-color: #2563eb; }
-        .row-actions {
-            position: absolute;
-            top: -0.8rem;
-            right: 0.5rem;
-            display: none;
-            gap: 0.3rem;
-            background: white;
-            border-radius: 30px;
-            padding: 0.2rem 0.5rem;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            z-index: 20;
-        }
-        .row:hover .row-actions { display: flex; }
-        .row-action {
-            background: none;
-            border: none;
-            font-size: 0.7rem;
-            cursor: pointer;
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-        }
-        .col {
-            flex: 1;
-            min-width: 200px;
-            background: rgba(0,0,0,0.02);
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 0.5rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            position: relative;
-            transition: all 0.2s;
-        }
-        .col:hover { border-color: #2563eb; background: #fafcff; }
-        .col-actions {
-            position: absolute;
-            top: -0.6rem;
-            left: 0.5rem;
-            display: none;
-            gap: 0.3rem;
-            background: white;
-            border-radius: 30px;
-            padding: 0.2rem 0.5rem;
-            z-index: 20;
-        }
-        .col:hover .col-actions { display: flex; }
-        .col-action {
-            background: none;
-            border: none;
-            font-size: 0.7rem;
-            cursor: pointer;
-        }
-        .blocks-container-in-col {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            min-height: 60px;
-        }
-        .block {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 0.8rem;
-            position: relative;
-        }
-        .block:hover { border-color: #2563eb; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .block-actions {
-            position: absolute;
-            top: -0.7rem;
-            right: 0.5rem;
-            display: none;
-            gap: 0.3rem;
-            background: white;
-            border-radius: 30px;
-            padding: 0.2rem 0.5rem;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-            z-index: 10;
-        }
-        .block:hover .block-actions { display: flex; }
-        .block-action {
-            background: none;
-            border: none;
-            font-size: 0.7rem;
-            cursor: pointer;
-            padding: 0.2rem 0.4rem;
-            border-radius: 4px;
-        }
-        .block-action.delete { color: #dc2626; }
-        .block-action.duplicate { color: #2563eb; }
-        .block-action.move-up, .block-action.move-down { color: #475569; }
-        .add-row-btn {
-            margin-top: 1rem;
-            padding: 0.5rem;
-            background: #f1f5f9;
-            border: 1px dashed #2563eb;
-            border-radius: 12px;
-            text-align: center;
-            cursor: pointer;
-            color: #2563eb;
-        }
-        .property-panel {
-            width: 350px;
-            background: white;
-            border-left: 1px solid #e2e8f0;
-            padding: 1rem;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        .property-group {
-            border-bottom: 1px solid #e5e7eb;
-            padding-bottom: 0.8rem;
-        }
-        .property-group label {
-            font-size: 0.7rem;
+        .effective-date {
             font-weight: 600;
-            display: block;
-            margin-bottom: 0.2rem;
-            color: #334155;
+            color: #dc2626;
         }
-        .property-group input, .property-group textarea, .property-group select {
-            width: 100%;
-            padding: 0.4rem;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            font-size: 0.8rem;
-        }
-        .color-input { height: 32px; }
-        footer {
-            font-size: 0.7rem;
-            text-align: center;
-            padding: 0.8rem;
-            color: #94a3b8;
+
+        .footer {
             border-top: 1px solid #e5e7eb;
+            padding: 1rem 2rem 1.5rem;
+            font-size: 0.75rem;
+            color: #6b7280;
         }
-        .empty-state { text-align: center; color: #94a3b8; padding: 2rem; }
-        .animate-fade-up { animation: fadeUp 0.6s ease-out; }
-        @keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+        hr {
+            margin: 0.5rem 0;
+            border-color: #e5e7eb;
+        }
     </style>
 </head>
 <body>
-    <!-- CEASE OPERATIONS BANNER (only in builder) -->
-    <div class="cease-banner">
-        <p>⚠️ TeeHea will cease operations effective immediately. Thank you for using our service. ⚠️</p>
-        <small>No new features will be added. Existing projects can still be exported until further notice.</small>
-    </div>
-
-    <div class="toolbar">
-        <div class="logo">🧩 TeeHea</div>
-        <div class="btn-group">
-            <button id="undoBtn" class="btn">↩️ Undo</button>
-            <button id="redoBtn" class="btn">↪️ Redo</button>
-            <button id="saveBtn" class="btn">💾 Save</button>
-            <button id="loadBtn" class="btn">📂 Load</button>
-            <button id="darkModeBtn" class="btn">🌙 Dark mode</button>
-            <select id="templateSelect" class="btn"><option value="">📁 Templates</option><option value="blank">Blank</option><option value="personal">Personal</option><option value="business">Business</option><option value="portfolio">Portfolio</option><option value="ecomm">E‑commerce</option><option value="landing">Landing page</option><option value="comingsoon">Coming soon</option></select>
-            <select id="deviceSelect" class="btn"><option value="desktop">💻 Desktop</option><option value="tablet">📱 Tablet</option><option value="mobile">📲 Mobile</option></select>
-            <button id="exportBtn" class="btn btn-primary">⬇️ Export HTML</button>
+    <div class="shutdown-card">
+        <div class="header">
+            <div class="logo">🧩 TeeHea</div>
+            <div class="status-badge">Operations ceased</div>
         </div>
-    </div>
-    <div class="main">
-        <div class="sidebar" id="blockSidebar">
-            <div class="sidebar-category"><h4>LAYOUT</h4><div class="block-type" data-type="row">➕ Add Row</div></div>
-            <div class="sidebar-category"><h4>BASIC</h4>
-                <div class="block-type" data-type="heading">Heading</div><div class="block-type" data-type="paragraph">Paragraph</div>
-                <div class="block-type" data-type="image">Image</div><div class="block-type" data-type="button">Button</div>
-                <div class="block-type" data-type="buttongroup">Button Group</div>
-                <div class="block-type" data-type="divider">Divider</div><div class="block-type" data-type="spacer">Spacer</div>
-                <div class="block-type" data-type="icon">Icon</div><div class="block-type" data-type="quote">Quote</div>
-                <div class="block-type" data-type="list">List</div><div class="block-type" data-type="badge">Badge</div>
-                <div class="block-type" data-type="tooltip">Tooltip</div><div class="block-type" data-type="rating">Rating</div>
+        <div class="content">
+            <h1>Service permanently shut down</h1>
+            <div class="message">
+                TeeHea has officially ceased operations. The builder is no longer available.
             </div>
-            <div class="sidebar-category"><h4>MEDIA</h4>
-                <div class="block-type" data-type="video">Video</div><div class="block-type" data-type="gallery">Gallery</div>
-                <div class="block-type" data-type="carousel">Carousel</div><div class="block-type" data-type="map">Map</div>
-                <div class="block-type" data-type="audio">Audio</div><div class="block-type" data-type="parallax">Parallax</div>
+            <div class="details">
+                <p><span>📅</span> <strong>Effective date:</strong> <span class="effective-date">June 7, 2026</span></p>
+                <p><span>🔒</span> All hosted projects are no longer accessible.</p>
+                <p><span>📁</span> No new exports or changes can be made.</p>
+                <p><span>💬</span> For any inquiries, please refer to our shutdown FAQ (no longer maintained).</p>
             </div>
-            <div class="sidebar-category"><h4>FORMS</h4>
-                <div class="block-type" data-type="contactform">Contact</div><div class="block-type" data-type="newsletter">Newsletter</div>
-                <div class="block-type" data-type="fileupload">File upload</div><div class="block-type" data-type="multistep">Multi‑step</div>
-            </div>
-            <div class="sidebar-category"><h4>ADVANCED</h4>
-                <div class="block-type" data-type="countdown">Countdown</div><div class="block-type" data-type="progress">Progress</div>
-                <div class="block-type" data-type="accordion">Accordion</div><div class="block-type" data-type="tabs">Tabs</div>
-                <div class="block-type" data-type="modal">Modal</div><div class="block-type" data-type="cookie">Cookie banner</div>
-                <div class="block-type" data-type="backtotop">Back to top</div><div class="block-type" data-type="timeline">Timeline</div>
-                <div class="block-type" data-type="pricing">Pricing</div><div class="block-type" data-type="testimonial">Testimonial</div>
-            </div>
-            <div class="sidebar-category"><h4>INTERACTIVE</h4>
-                <div class="block-type" data-type="countup">Count‑up</div><div class="block-type" data-type="typed">Typewriter</div>
-                <div class="block-type" data-type="particles">Particles</div>
-            </div>
-            <div class="sidebar-category"><h4>E‑COMMERCE</h4>
-                <div class="block-type" data-type="product">Product card</div><div class="block-type" data-type="cart">Cart</div>
-                <div class="block-type" data-type="checkout">Checkout</div>
-            </div>
-            <div class="sidebar-category"><h4>BLOG</h4>
-                <div class="block-type" data-type="post">Post preview</div><div class="block-type" data-type="search">Search</div>
-                <div class="block-type" data-type="share">Share buttons</div>
-            </div>
-            <div class="sidebar-category"><h4>UTILITIES</h4>
-                <div class="block-type" data-type="html">HTML embed</div><div class="block-type" data-type="qrcode">QR code</div>
-                <div class="block-type" data-type="copy">Copy text</div><div class="block-type" data-type="weather">Weather</div>
+            <div class="message" style="font-size:0.85rem; background:#fef2f2; padding:0.8rem; border-radius:16px;">
+                ⚠️ This service has been discontinued. Thank you for using TeeHea.
             </div>
         </div>
-        <div class="canvas">
-            <div class="device-frame desktop" id="deviceFrame">
-                <div class="site-header">
-                    <div class="site-title" contenteditable="true" id="siteTitleInput">My Site</div>
-                    <div class="site-tagline" contenteditable="true" id="siteTaglineInput">Edit tagline</div>
-                </div>
-                <div class="page-container" id="pageContainer"></div>
-                <footer>⚡ Built with TeeHea</footer>
-            </div>
-        </div>
-        <div class="property-panel" id="propertyPanel">
-            <div class="property-group"><h4>Global styles</h4>
-                <label>Primary color</label><input type="color" id="primaryColor" value="#2563eb" class="color-input">
-                <label>Background</label><input type="color" id="bgColor" value="#ffffff" class="color-input">
-                <label>Max width (px)</label><input type="number" id="maxWidth" value="1200">
-                <label>Google Font</label><select id="googleFont"><option>Inter</option><option>Roboto</option><option>Open Sans</option><option>Poppins</option></select>
-                <label>Font size</label><select id="globalFontSize"><option value="0.9rem">Small</option><option value="1rem" selected>Medium</option><option value="1.2rem">Large</option></select>
-                <label>Animation</label><select id="animationSelect"><option value="none">None</option><option value="fade-up">Fade up</option></select>
-            </div>
-            <div class="property-group"><h4>SEO</h4>
-                <label>Meta title</label><input id="metaTitle" placeholder="Page title">
-                <label>Meta description</label><textarea id="metaDescription" rows="2"></textarea>
-            </div>
-            <div class="property-group"><h4>Selected element</h4><div id="elementProperties">Click on a row, column, or block to edit.</div></div>
-            <div class="property-group"><label>Custom CSS</label><textarea id="customCss" rows="3"></textarea><label>Custom JS</label><textarea id="customJs" rows="3"></textarea></div>
+        <div class="footer">
+            &copy; 2026 TeeHea — All operations permanently closed.
         </div>
     </div>
-
-    <script>
-        // ========== TEeHea FULL BUILDER LOGIC (inline) ==========
-        let page = [];
-        let nextId = 1000;
-        let history = [];
-        let historyIndex = -1;
-        let isUndoRedo = false;
-        let selectedElement = null;
-
-        function escapeHtml(s) {
-            if (!s) return '';
-            return s.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
-        }
-
-        // Block factory (all types)
-        function createBlock(type) {
-            const id = nextId++;
-            if (type === 'heading') return { id, type, text: 'New heading', marginTop: '', marginBottom: '' };
-            if (type === 'paragraph') return { id, type, text: 'Lorem ipsum dolor sit amet.', marginTop: '', marginBottom: '' };
-            if (type === 'image') return { id, type, src: 'https://picsum.photos/600/400', alt: 'image', borderRadius: '8px', boxShadow: '' };
-            if (type === 'button') return { id, type, label: 'Button', url: '#', target: '_self', marginTop: '', marginBottom: '' };
-            if (type === 'buttongroup') return { id, type, buttons: [{ label: 'Button 1', url: '#', target: '_self' }, { label: 'Button 2', url: '#', target: '_self' }] };
-            if (type === 'divider') return { id, type };
-            if (type === 'spacer') return { id, type, height: 40 };
-            if (type === 'icon') return { id, type, icon: 'fa-star', text: 'Icon' };
-            if (type === 'quote') return { id, type, text: 'Quote', author: 'Author' };
-            if (type === 'list') return { id, type, items: ['Item 1', 'Item 2'] };
-            if (type === 'badge') return { id, type, text: 'New', color: '#2563eb' };
-            if (type === 'tooltip') return { id, type, text: 'Hover me', tooltip: 'Tooltip info' };
-            if (type === 'rating') return { id, type, value: 4, max: 5 };
-            if (type === 'video') return { id, type, url: 'https://www.youtube.com/embed/dQw4w9WgXcQ' };
-            if (type === 'gallery') return { id, type, images: ['https://picsum.photos/200/150', 'https://picsum.photos/200/151'] };
-            if (type === 'carousel') return { id, type, images: ['https://picsum.photos/400/200', 'https://picsum.photos/400/201'] };
-            if (type === 'map') return { id, type, embed: 'https://www.google.com/maps/embed?pb=!1m18' };
-            if (type === 'audio') return { id, type, src: 'https://samplelib.com/lib/preview/mp3/sample-3s.mp3' };
-            if (type === 'parallax') return { id, type, bgImage: 'https://picsum.photos/1200/400', text: 'Scroll effect' };
-            if (type === 'contactform') return { id, type };
-            if (type === 'newsletter') return { id, type };
-            if (type === 'fileupload') return { id, type };
-            if (type === 'multistep') return { id, type, steps: ['Step 1', 'Step 2'] };
-            if (type === 'countdown') return { id, type, targetDate: new Date(Date.now() + 7 * 86400000).toISOString().slice(0, 10), label: 'Event starts in' };
-            if (type === 'progress') return { id, type, percent: 75, label: 'Skill' };
-            if (type === 'accordion') return { id, type, items: [{ title: 'Section', content: 'Content' }] };
-            if (type === 'tabs') return { id, type, tabs: [{ title: 'Tab1', content: 'Content1' }] };
-            if (type === 'modal') return { id, type, buttonText: 'Open modal', content: 'Modal content' };
-            if (type === 'cookie') return { id, type, message: 'We use cookies', buttonText: 'Accept' };
-            if (type === 'backtotop') return { id, type };
-            if (type === 'timeline') return { id, type, events: [{ year: '2023', text: 'Launched' }] };
-            if (type === 'pricing') return { id, type, name: 'Basic', price: '$9', features: ['Feature'] };
-            if (type === 'testimonial') return { id, type, text: 'Great!', author: 'John' };
-            if (type === 'countup') return { id, type, target: 1000, label: 'Users' };
-            if (type === 'typed') return { id, type, strings: ['Welcome', 'TeeHea'] };
-            if (type === 'particles') return { id, type };
-            if (type === 'product') return { id, type, name: 'Product', price: '$19', image: 'https://picsum.photos/200/150' };
-            if (type === 'cart') return { id, type };
-            if (type === 'checkout') return { id, type };
-            if (type === 'post') return { id, type, title: 'Post title', excerpt: 'Summary', date: 'Today', image: 'https://picsum.photos/300/200' };
-            if (type === 'search') return { id, type };
-            if (type === 'share') return { id, type, url: 'https://example.com' };
-            if (type === 'html') return { id, type, code: '<div>Custom HTML</div>' };
-            if (type === 'qrcode') return { id, type, text: 'https://teehea.com' };
-            if (type === 'copy') return { id, type, text: 'Copy this text' };
-            if (type === 'weather') return { id, type, city: 'London' };
-            return { id, type, text: 'New block' };
-        }
-
-        function createRow(colCount = 2) {
-            const rowId = nextId++;
-            const cols = [];
-            for (let i = 0; i < colCount; i++) cols.push({ id: nextId++, blocks: [] });
-            return { id: rowId, columns: cols, style: { bg: '', minHeight: '', paddingTop: '', paddingBottom: '', gap: '1rem' } };
-        }
-
-        function saveToHistory() {
-            if (isUndoRedo) return;
-            const state = JSON.parse(JSON.stringify(page));
-            history = history.slice(0, historyIndex + 1);
-            history.push(state);
-            historyIndex++;
-            if (history.length > 100) history.shift();
-        }
-
-        function undo() {
-            if (historyIndex > 0) {
-                isUndoRedo = true;
-                historyIndex--;
-                page = JSON.parse(JSON.stringify(history[historyIndex]));
-                renderPage();
-                isUndoRedo = false;
-            }
-        }
-
-        function redo() {
-            if (historyIndex < history.length - 1) {
-                isUndoRedo = true;
-                historyIndex++;
-                page = JSON.parse(JSON.stringify(history[historyIndex]));
-                renderPage();
-                isUndoRedo = false;
-            }
-        }
-
-        function renderPage() {
-            const container = document.getElementById('pageContainer');
-            if (!container) return;
-            container.innerHTML = '';
-            if (page.length === 0) {
-                const emptyDiv = document.createElement('div');
-                emptyDiv.className = 'empty-state';
-                emptyDiv.innerText = '✨ Click "+ Add Row" to start building. Drag blocks from sidebar into columns.';
-                container.appendChild(emptyDiv);
-            } else {
-                page.forEach((row, rowIdx) => {
-                    const rowDiv = document.createElement('div');
-                    rowDiv.className = 'row';
-                    rowDiv.setAttribute('data-row-idx', rowIdx);
-                    if (row.style.bg) rowDiv.style.backgroundColor = row.style.bg;
-                    if (row.style.minHeight) rowDiv.style.minHeight = row.style.minHeight;
-                    if (row.style.paddingTop) rowDiv.style.paddingTop = row.style.paddingTop;
-                    if (row.style.paddingBottom) rowDiv.style.paddingBottom = row.style.paddingBottom;
-                    if (row.style.gap) rowDiv.style.gap = row.style.gap;
-                    const rowActions = document.createElement('div');
-                    rowActions.className = 'row-actions';
-                    rowActions.innerHTML = `<button class="row-action delete-row" title="Delete row">🗑️</button><button class="row-action add-col" title="Add column">+ Col</button>`;
-                    rowActions.querySelector('.delete-row').addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        page.splice(rowIdx, 1);
-                        saveToHistory();
-                        renderPage();
-                    });
-                    rowActions.querySelector('.add-col').addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        row.columns.push({ id: nextId++, blocks: [] });
-                        saveToHistory();
-                        renderPage();
-                    });
-                    rowDiv.appendChild(rowActions);
-                    rowDiv.addEventListener('click', (e) => {
-                        if (e.target === rowDiv || e.target.classList.contains('row')) {
-                            selectedElement = { type: 'row', rowIdx };
-                            updateElementProperties();
-                        }
-                    });
-                    row.columns.forEach((col, colIdx) => {
-                        const colDiv = document.createElement('div');
-                        colDiv.className = 'col';
-                        colDiv.setAttribute('data-col-path', `${rowIdx},${colIdx}`);
-                        if (col.style && col.style.flex) colDiv.style.flex = col.style.flex;
-                        if (col.style && col.style.bg) colDiv.style.backgroundColor = col.style.bg;
-                        const colActions = document.createElement('div');
-                        colActions.className = 'col-actions';
-                        colActions.innerHTML = `<button class="col-action delete-col" title="Delete column">✖</button>`;
-                        colActions.querySelector('.delete-col').addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            row.columns.splice(colIdx, 1);
-                            if (row.columns.length === 0) page.splice(rowIdx, 1);
-                            saveToHistory();
-                            renderPage();
-                        });
-                        colDiv.appendChild(colActions);
-                        colDiv.addEventListener('click', (e) => {
-                            if (e.target === colDiv || e.target.classList.contains('col')) {
-                                selectedElement = { type: 'col', rowIdx, colIdx };
-                                updateElementProperties();
-                            }
-                        });
-                        const blocksContainer = document.createElement('div');
-                        blocksContainer.className = 'blocks-container-in-col';
-                        blocksContainer.setAttribute('data-col-path', `${rowIdx},${colIdx}`);
-                        col.blocks.forEach((block, blockIdx) => {
-                            const blockEl = renderBlockElement(block, rowIdx, colIdx, blockIdx);
-                            blocksContainer.appendChild(blockEl);
-                        });
-                        colDiv.appendChild(blocksContainer);
-                        rowDiv.appendChild(colDiv);
-                    });
-                    container.appendChild(rowDiv);
-                });
-            }
-            const addRowBtn = document.createElement('div');
-            addRowBtn.className = 'add-row-btn';
-            addRowBtn.innerText = '+ Add new row';
-            addRowBtn.addEventListener('click', () => {
-                page.push(createRow(2));
-                saveToHistory();
-                renderPage();
-            });
-            container.appendChild(addRowBtn);
-            initDropTargets();
-            updateGlobalPreview();
-            applyAnimations();
-        }
-
-        function renderBlockElement(block, rowIdx, colIdx, blockIdx) {
-            const div = document.createElement('div');
-            div.className = 'block';
-            div.setAttribute('data-block-id', block.id);
-            if (block.marginTop) div.style.marginTop = block.marginTop;
-            if (block.marginBottom) div.style.marginBottom = block.marginBottom;
-            const actions = document.createElement('div');
-            actions.className = 'block-actions';
-            actions.innerHTML = `<button class="block-action move-up" title="Move up">↑</button>
-                                 <button class="block-action move-down" title="Move down">↓</button>
-                                 <button class="block-action duplicate" title="Duplicate">📋</button>
-                                 <button class="block-action delete" title="Delete">🗑️</button>`;
-            actions.querySelector('.move-up').addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (blockIdx > 0) {
-                    const col = page[rowIdx].columns[colIdx];
-                    [col.blocks[blockIdx - 1], col.blocks[blockIdx]] = [col.blocks[blockIdx], col.blocks[blockIdx - 1]];
-                    saveToHistory();
-                    renderPage();
-                }
-            });
-            actions.querySelector('.move-down').addEventListener('click', (e) => {
-                e.stopPropagation();
-                const col = page[rowIdx].columns[colIdx];
-                if (blockIdx < col.blocks.length - 1) {
-                    [col.blocks[blockIdx + 1], col.blocks[blockIdx]] = [col.blocks[blockIdx], col.blocks[blockIdx + 1]];
-                    saveToHistory();
-                    renderPage();
-                }
-            });
-            actions.querySelector('.duplicate').addEventListener('click', (e) => {
-                e.stopPropagation();
-                const newBlock = JSON.parse(JSON.stringify(block));
-                newBlock.id = nextId++;
-                page[rowIdx].columns[colIdx].blocks.splice(blockIdx + 1, 0, newBlock);
-                saveToHistory();
-                renderPage();
-            });
-            actions.querySelector('.delete').addEventListener('click', (e) => {
-                e.stopPropagation();
-                page[rowIdx].columns[colIdx].blocks.splice(blockIdx, 1);
-                saveToHistory();
-                renderPage();
-            });
-            div.appendChild(actions);
-            const contentDiv = document.createElement('div');
-            contentDiv.className = 'block-content';
-            // Render based on type (full implementation)
-            if (block.type === 'heading') contentDiv.innerHTML = `<h2 style="margin:0;">${escapeHtml(block.text)}</h2>`;
-            else if (block.type === 'paragraph') contentDiv.innerHTML = `<p style="margin:0;">${escapeHtml(block.text).replace(/\n/g, '<br>')}</p>`;
-            else if (block.type === 'image') {
-                let imgStyle = `max-width:100%; border-radius:${block.borderRadius || '8px'}`;
-                if (block.boxShadow) imgStyle += `; box-shadow:${block.boxShadow}`;
-                contentDiv.innerHTML = `<img src="${escapeHtml(block.src)}" alt="${escapeHtml(block.alt)}" style="${imgStyle}">`;
-            } else if (block.type === 'button') {
-                let target = block.target === '_blank' ? ' target="_blank" rel="noopener"' : '';
-                contentDiv.innerHTML = `<a href="${escapeHtml(block.url)}"${target} style="display:inline-block; background:var(--primary,#2563eb); color:white; padding:0.5rem 1rem; border-radius:30px;">${escapeHtml(block.label)}</a>`;
-            } else if (block.type === 'buttongroup') {
-                let btns = '';
-                block.buttons.forEach(btn => {
-                    let target = btn.target === '_blank' ? ' target="_blank" rel="noopener"' : '';
-                    btns += `<a href="${escapeHtml(btn.url)}"${target} style="display:inline-block; background:var(--primary,#2563eb); color:white; padding:0.5rem 1rem; border-radius:30px; margin:0 0.3rem;">${escapeHtml(btn.label)}</a>`;
-                });
-                contentDiv.innerHTML = `<div style="display:flex; flex-wrap:wrap; gap:0.5rem;">${btns}</div>`;
-            } else if (block.type === 'divider') contentDiv.innerHTML = `<hr>`;
-            else if (block.type === 'spacer') contentDiv.innerHTML = `<div style="height:${block.height}px;"></div>`;
-            else if (block.type === 'icon') contentDiv.innerHTML = `<i class="fas ${block.icon}"></i> ${escapeHtml(block.text)}`;
-            else if (block.type === 'quote') contentDiv.innerHTML = `<blockquote>“${escapeHtml(block.text)}” — ${escapeHtml(block.author)}</blockquote>`;
-            else if (block.type === 'list') contentDiv.innerHTML = `<ul>${block.items.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ul>`;
-            else if (block.type === 'badge') contentDiv.innerHTML = `<span style="background:${block.color}; color:white; padding:0.2rem 0.5rem; border-radius:20px;">${escapeHtml(block.text)}</span>`;
-            else if (block.type === 'tooltip') contentDiv.innerHTML = `<span title="${escapeHtml(block.tooltip)}" style="border-bottom:1px dotted;">${escapeHtml(block.text)}</span>`;
-            else if (block.type === 'rating') contentDiv.innerHTML = `<div>${'★'.repeat(block.value)}${'☆'.repeat(block.max - block.value)}</div>`;
-            else if (block.type === 'video') contentDiv.innerHTML = `<div style="position:relative; padding-bottom:56.25%;"><iframe src="${escapeHtml(block.url)}" allowfullscreen style="position:absolute; width:100%; height:100%;"></iframe></div>`;
-            else if (block.type === 'gallery') contentDiv.innerHTML = `<div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:0.5rem;">${block.images.map(img => `<img src="${escapeHtml(img)}" style="width:100%;">`).join('')}</div>`;
-            else if (block.type === 'carousel') contentDiv.innerHTML = `<div style="display:flex; overflow-x:auto; gap:0.5rem;">${block.images.map(img => `<img src="${escapeHtml(img)}" style="flex:0 0 80%; border-radius:12px;">`).join('')}</div>`;
-            else if (block.type === 'map') contentDiv.innerHTML = `<iframe src="${escapeHtml(block.embed)}" width="100%" height="300"></iframe>`;
-            else if (block.type === 'audio') contentDiv.innerHTML = `<audio controls src="${escapeHtml(block.src)}"></audio>`;
-            else if (block.type === 'parallax') contentDiv.innerHTML = `<div style="background:url('${escapeHtml(block.bgImage)}') fixed center/cover; padding:4rem; color:white;">${escapeHtml(block.text)}</div>`;
-            else if (block.type === 'contactform') contentDiv.innerHTML = `<form onsubmit="alert('Demo: message sent'); return false;"><input placeholder="Name"><input placeholder="Email"><textarea placeholder="Message"></textarea><button type="submit" style="background:var(--primary,#2563eb); color:white;">Send</button></form>`;
-            else if (block.type === 'newsletter') contentDiv.innerHTML = `<form onsubmit="alert('Demo: subscribed'); return false;"><input placeholder="Email"><button type="submit" style="background:var(--primary,#2563eb);">Subscribe</button></form>`;
-            else if (block.type === 'fileupload') contentDiv.innerHTML = `<input type="file">`;
-            else if (block.type === 'multistep') contentDiv.innerHTML = `<div>Multi-step form: ${block.steps.join(' → ')}</div>`;
-            else if (block.type === 'countdown') {
-                const targetDate = new Date(block.targetDate).getTime();
-                const update = () => {
-                    const now = new Date().getTime();
-                    const diff = Math.max(0, targetDate - now);
-                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((diff % (86400000)) / 3600000);
-                    const mins = Math.floor((diff % 3600000) / 60000);
-                    const secs = Math.floor((diff % 60000) / 1000);
-                    const span = contentDiv.querySelector('.countdown-display');
-                    if (span) span.innerText = `${days}d ${hours}h ${mins}m ${secs}s`;
-                    if (diff <= 0) clearInterval(interval);
-                };
-                contentDiv.innerHTML = `<div>${escapeHtml(block.label)} <span class="countdown-display"></span></div>`;
-                const interval = setInterval(update, 1000);
-                update();
-                div._countdownInterval = interval;
-            } else if (block.type === 'progress') contentDiv.innerHTML = `<div>${escapeHtml(block.label)} <progress value="${block.percent}" max="100"></progress> ${block.percent}%</div>`;
-            else if (block.type === 'accordion') contentDiv.innerHTML = `<div>${block.items.map(i => `<details><summary>${escapeHtml(i.title)}</summary><p>${escapeHtml(i.content)}</p></details>`).join('')}</div>`;
-            else if (block.type === 'tabs') {
-                let tabsHtml = `<div style="display:flex; gap:0.5rem; border-bottom:1px solid #ccc;">`;
-                block.tabs.forEach((t, idx) => tabsHtml += `<button data-tab="${idx}" style="background:none; border:none; padding:0.3rem 0.8rem;">${escapeHtml(t.title)}</button>`);
-                tabsHtml += `</div><div>`;
-                block.tabs.forEach((t, idx) => tabsHtml += `<div data-tab-content="${idx}" style="display:${idx === 0 ? 'block' : 'none'}">${escapeHtml(t.content)}</div>`);
-                tabsHtml += `</div>`;
-                contentDiv.innerHTML = tabsHtml;
-            } else if (block.type === 'modal') contentDiv.innerHTML = `<button style="background:var(--primary,#2563eb); color:white;">${escapeHtml(block.buttonText)}</button>`;
-            else if (block.type === 'cookie') contentDiv.innerHTML = `<div style="background:#f0f0f0; padding:1rem;">${escapeHtml(block.message)} <button>${escapeHtml(block.buttonText)}</button></div>`;
-            else if (block.type === 'backtotop') contentDiv.innerHTML = `<button onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</button>`;
-            else if (block.type === 'timeline') contentDiv.innerHTML = `<div>${block.events.map(e => `<div><strong>${escapeHtml(e.year)}</strong> ${escapeHtml(e.text)}</div>`).join('')}</div>`;
-            else if (block.type === 'pricing') contentDiv.innerHTML = `<div style="border:1px solid #e5e7eb; border-radius:24px; padding:1rem;"><h3>${escapeHtml(block.name)}</h3><div style="font-size:1.5rem;">${escapeHtml(block.price)}</div><ul>${block.features.map(f => `<li>${escapeHtml(f)}</li>`).join('')}</ul><button style="background:var(--primary,#2563eb); color:white;">Buy</button></div>`;
-            else if (block.type === 'testimonial') contentDiv.innerHTML = `<div style="background:#f9fafb; padding:1rem; border-radius:12px;"><p>“${escapeHtml(block.text)}”</p><p><strong>— ${escapeHtml(block.author)}</strong></p></div>`;
-            else if (block.type === 'countup') contentDiv.innerHTML = `<div><span class="countup-val">0</span> ${escapeHtml(block.label)}</div>`;
-            else if (block.type === 'typed') contentDiv.innerHTML = `<span id="typed-${block.id}"></span>`;
-            else if (block.type === 'particles') contentDiv.innerHTML = `<canvas id="particles-${block.id}" style="height:200px; background:#f0f0f0;"></canvas>`;
-            else if (block.type === 'product') contentDiv.innerHTML = `<div><img src="${escapeHtml(block.image)}" style="width:100%; border-radius:12px;"><h3>${escapeHtml(block.name)}</h3><p>${escapeHtml(block.price)}</p><button style="background:var(--primary,#2563eb); color:white;">Add to cart</button></div>`;
-            else if (block.type === 'cart') contentDiv.innerHTML = `<div>Cart (0 items)</div>`;
-            else if (block.type === 'checkout') contentDiv.innerHTML = `<button>Proceed to checkout</button>`;
-            else if (block.type === 'post') contentDiv.innerHTML = `<div><img src="${escapeHtml(block.image)}" style="width:100%;"><h3>${escapeHtml(block.title)}</h3><p>${escapeHtml(block.excerpt)}</p><small>${escapeHtml(block.date)}</small></div>`;
-            else if (block.type === 'search') contentDiv.innerHTML = `<input type="text" placeholder="Search..."><button>🔍</button>`;
-            else if (block.type === 'share') contentDiv.innerHTML = `<div>Share: <a href="#">Twitter</a> <a href="#">Facebook</a></div>`;
-            else if (block.type === 'html') contentDiv.innerHTML = block.code;
-            else if (block.type === 'qrcode') contentDiv.innerHTML = `<div>QR: ${escapeHtml(block.text)}</div>`;
-            else if (block.type === 'copy') contentDiv.innerHTML = `<div>${escapeHtml(block.text)} <button>Copy</button></div>`;
-            else if (block.type === 'weather') contentDiv.innerHTML = `<div>Weather in ${escapeHtml(block.city)}: 22°C ☀️</div>`;
-            else contentDiv.innerHTML = `<div>${block.type}</div>`;
-            div.appendChild(contentDiv);
-            div.addEventListener('click', (e) => {
-                if (!e.target.closest('.block-action')) {
-                    selectedElement = { type: 'block', rowIdx, colIdx, blockIdx };
-                    updateBlockProperties(block);
-                }
-            });
-            return div;
-        }
-
-        // Drag & drop from sidebar
-        function initDropTargets() {
-            const containers = document.querySelectorAll('.blocks-container-in-col');
-            containers.forEach(container => {
-                container.removeEventListener('dragover', handleDragOver);
-                container.removeEventListener('drop', handleDrop);
-                container.addEventListener('dragover', handleDragOver);
-                container.addEventListener('drop', handleDrop);
-            });
-        }
-
-        function handleDragOver(e) {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'copy';
-        }
-
-        function handleDrop(e) {
-            e.preventDefault();
-            const type = e.dataTransfer.getData('text/plain');
-            if (!type || type === 'row') return;
-            const targetContainer = e.currentTarget;
-            const targetPath = targetContainer.getAttribute('data-col-path');
-            if (!targetPath) return;
-            const [rowIdx, colIdx] = targetPath.split(',').map(Number);
-            if (isNaN(rowIdx) || isNaN(colIdx)) return;
-            const newBlock = createBlock(type);
-            page[rowIdx].columns[colIdx].blocks.push(newBlock);
-            saveToHistory();
-            renderPage();
-        }
-
-        function setupSidebarDrag() {
-            const blocks = document.querySelectorAll('.block-type');
-            blocks.forEach(el => {
-                el.setAttribute('draggable', 'true');
-                el.addEventListener('dragstart', (e) => {
-                    const type = el.getAttribute('data-type');
-                    if (type) e.dataTransfer.setData('text/plain', type);
-                    e.dataTransfer.effectAllowed = 'copy';
-                });
-            });
-        }
-
-        // Property editors
-        function updateElementProperties() {
-            const container = document.getElementById('elementProperties');
-            if (!selectedElement) { container.innerHTML = 'Click on a row, column, or block to edit.'; return; }
-            if (selectedElement.type === 'row') {
-                const row = page[selectedElement.rowIdx];
-                container.innerHTML = `
-                    <div class="property-group"><h4>Row Style</h4>
-                    <label>Background color</label><input type="color" id="rowBg" value="${row.style.bg || '#ffffff'}" class="color-input">
-                    <label>Min height (px)</label><input type="text" id="rowMinHeight" placeholder="e.g., 200px" value="${row.style.minHeight || ''}">
-                    <label>Padding top (px)</label><input type="text" id="rowPadTop" placeholder="e.g., 1rem" value="${row.style.paddingTop || ''}">
-                    <label>Padding bottom (px)</label><input type="text" id="rowPadBottom" placeholder="e.g., 1rem" value="${row.style.paddingBottom || ''}">
-                    <label>Gap between columns</label><input type="text" id="rowGap" placeholder="e.g., 1rem" value="${row.style.gap || '1rem'}">
-                    </div>
-                `;
-                const attach = (id, prop) => { const el = document.getElementById(id); if (el) el.addEventListener('input', () => { row.style[prop] = el.value; saveToHistory(); renderPage(); }); };
-                attach('rowBg', 'bg'); attach('rowMinHeight', 'minHeight'); attach('rowPadTop', 'paddingTop');
-                attach('rowPadBottom', 'paddingBottom'); attach('rowGap', 'gap');
-            } else if (selectedElement.type === 'col') {
-                const col = page[selectedElement.rowIdx].columns[selectedElement.colIdx];
-                if (!col.style) col.style = {};
-                container.innerHTML = `
-                    <div class="property-group"><h4>Column Style</h4>
-                    <label>Flex width (ratio, e.g., 1, 2, 3)</label><input type="number" id="colFlex" min="0.5" step="0.5" value="${col.style.flex ? parseFloat(col.style.flex) : 1}">
-                    <label>Background color</label><input type="color" id="colBg" value="${col.style.bg || '#ffffff'}" class="color-input">
-                    </div>
-                `;
-                const attach = (id, prop) => { const el = document.getElementById(id); if (el) el.addEventListener('input', () => { col.style[prop] = el.value; saveToHistory(); renderPage(); }); };
-                attach('colFlex', 'flex'); attach('colBg', 'bg');
-            } else if (selectedElement.type === 'block') {
-                const block = page[selectedElement.rowIdx].columns[selectedElement.colIdx].blocks[selectedElement.blockIdx];
-                updateBlockProperties(block);
-            }
-        }
-
-        function updateBlockProperties(block) {
-            const panelDiv = document.getElementById('elementProperties');
-            if (!block) { panelDiv.innerHTML = 'Click a block to edit.'; return; }
-            let html = `<div class="property-group"><label>Block: ${block.type}</label>`;
-            html += `<label>Margin top</label><input type="text" id="marginTop" placeholder="0" value="${block.marginTop || ''}">
-                     <label>Margin bottom</label><input type="text" id="marginBottom" placeholder="0" value="${block.marginBottom || ''}">`;
-            if (block.type === 'heading' || block.type === 'paragraph' || block.type === 'quote') {
-                html += `<label>Text</label><textarea id="propText">${escapeHtml(block.text)}</textarea>`;
-                if (block.type === 'quote') html += `<label>Author</label><input id="propAuthor" value="${escapeHtml(block.author)}">`;
-            } else if (block.type === 'image') {
-                html += `<label>Image URL</label><input id="propSrc" value="${escapeHtml(block.src)}"><label>Alt</label><input id="propAlt" value="${escapeHtml(block.alt)}"><label>Border radius</label><input id="imgRadius" value="${block.borderRadius || '8px'}"><label>Box shadow</label><input id="imgShadow" placeholder="0 0 10px rgba(0,0,0,0.1)" value="${block.boxShadow || ''}">`;
-            } else if (block.type === 'button') {
-                html += `<label>Label</label><input id="propLabel" value="${escapeHtml(block.label)}"><label>URL</label><input id="propUrl" value="${escapeHtml(block.url)}"><label>Open in new tab</label><select id="propTarget"><option value="_self" ${block.target !== '_blank' ? 'selected' : ''}>Same tab</option><option value="_blank" ${block.target === '_blank' ? 'selected' : ''}>New tab</option></select>`;
-            } else if (block.type === 'buttongroup') {
-                html += `<label>Buttons (label:url:target, one per line)</label><textarea id="propButtonGroup">${block.buttons.map(b => `${b.label}:${b.url}:${b.target || '_self'}`).join('\n')}</textarea>`;
-            } else if (block.type === 'list') {
-                html += `<label>Items (one per line)</label><textarea id="propList">${block.items.join('\n')}</textarea>`;
-            } else if (block.type === 'badge') {
-                html += `<label>Text</label><input id="propBadgeText" value="${escapeHtml(block.text)}"><label>Color</label><input type="color" id="propBadgeColor" value="${block.color}">`;
-            } else if (block.type === 'countdown') {
-                html += `<label>Target date (YYYY-MM-DD)</label><input id="propCountDate" value="${block.targetDate}"><label>Label</label><input id="propCountLabel" value="${escapeHtml(block.label)}">`;
-            } else if (block.type === 'progress') {
-                html += `<label>Percent (0-100)</label><input id="propProgressPercent" type="number" value="${block.percent}"><label>Label</label><input id="propProgressLabel" value="${escapeHtml(block.label)}">`;
-            } else if (block.type === 'pricing') {
-                html += `<label>Plan name</label><input id="pricingName" value="${escapeHtml(block.name)}"><label>Price</label><input id="pricingPrice" value="${escapeHtml(block.price)}"><label>Features (one per line)</label><textarea id="pricingFeatures">${block.features.join('\n')}</textarea>`;
-            } else if (block.type === 'product') {
-                html += `<label>Name</label><input id="productName" value="${escapeHtml(block.name)}"><label>Price</label><input id="productPrice" value="${escapeHtml(block.price)}"><label>Image URL</label><input id="productImage" value="${escapeHtml(block.image)}">`;
-            } else if (block.type === 'html') {
-                html += `<label>Custom HTML</label><textarea id="propHtml" rows="6">${escapeHtml(block.code)}</textarea>`;
-            } else {
-                html += `<textarea rows="4">${escapeHtml(JSON.stringify(block, null, 2))}</textarea>`;
-            }
-            html += `</div>`;
-            panelDiv.innerHTML = html;
-            const attach = (id, handler) => { const el = document.getElementById(id); if (el) el.addEventListener('input', handler); };
-            const updateAndSave = () => { saveToHistory(); renderPage(); };
-            attach('marginTop', () => { block.marginTop = document.getElementById('marginTop').value; updateAndSave(); });
-            attach('marginBottom', () => { block.marginBottom = document.getElementById('marginBottom').value; updateAndSave(); });
-            if (block.type === 'heading' || block.type === 'paragraph' || block.type === 'quote') {
-                attach('propText', () => { block.text = document.getElementById('propText').value; updateAndSave(); });
-                if (block.type === 'quote') attach('propAuthor', () => { block.author = document.getElementById('propAuthor').value; updateAndSave(); });
-            } else if (block.type === 'image') {
-                attach('propSrc', () => { block.src = document.getElementById('propSrc').value; updateAndSave(); });
-                attach('propAlt', () => { block.alt = document.getElementById('propAlt').value; updateAndSave(); });
-                attach('imgRadius', () => { block.borderRadius = document.getElementById('imgRadius').value; updateAndSave(); });
-                attach('imgShadow', () => { block.boxShadow = document.getElementById('imgShadow').value; updateAndSave(); });
-            } else if (block.type === 'button') {
-                attach('propLabel', () => { block.label = document.getElementById('propLabel').value; updateAndSave(); });
-                attach('propUrl', () => { block.url = document.getElementById('propUrl').value; updateAndSave(); });
-                attach('propTarget', () => { block.target = document.getElementById('propTarget').value; updateAndSave(); });
-            } else if (block.type === 'buttongroup') {
-                attach('propButtonGroup', () => {
-                    const lines = document.getElementById('propButtonGroup').value.split('\n').filter(l => l.trim());
-                    block.buttons = lines.map(l => {
-                        let parts = l.split(':');
-                        return { label: parts[0] || 'Button', url: parts[1] || '#', target: parts[2] || '_self' };
-                    });
-                    updateAndSave();
-                });
-            } else if (block.type === 'list') {
-                attach('propList', () => { block.items = document.getElementById('propList').value.split('\n').filter(l => l.trim()); updateAndSave(); });
-            } else if (block.type === 'badge') {
-                attach('propBadgeText', () => { block.text = document.getElementById('propBadgeText').value; updateAndSave(); });
-                attach('propBadgeColor', () => { block.color = document.getElementById('propBadgeColor').value; updateAndSave(); });
-            } else if (block.type === 'countdown') {
-                attach('propCountDate', () => { block.targetDate = document.getElementById('propCountDate').value; updateAndSave(); });
-                attach('propCountLabel', () => { block.label = document.getElementById('propCountLabel').value; updateAndSave(); });
-            } else if (block.type === 'progress') {
-                attach('propProgressPercent', () => { block.percent = parseInt(document.getElementById('propProgressPercent').value); updateAndSave(); });
-                attach('propProgressLabel', () => { block.label = document.getElementById('propProgressLabel').value; updateAndSave(); });
-            } else if (block.type === 'pricing') {
-                attach('pricingName', () => { block.name = document.getElementById('pricingName').value; updateAndSave(); });
-                attach('pricingPrice', () => { block.price = document.getElementById('pricingPrice').value; updateAndSave(); });
-                attach('pricingFeatures', () => { block.features = document.getElementById('pricingFeatures').value.split('\n').filter(l => l.trim()); updateAndSave(); });
-            } else if (block.type === 'product') {
-                attach('productName', () => { block.name = document.getElementById('productName').value; updateAndSave(); });
-                attach('productPrice', () => { block.price = document.getElementById('productPrice').value; updateAndSave(); });
-                attach('productImage', () => { block.image = document.getElementById('productImage').value; updateAndSave(); });
-            } else if (block.type === 'html') {
-                attach('propHtml', () => { block.code = document.getElementById('propHtml').value; updateAndSave(); });
-            }
-        }
-
-        function updateGlobalPreview() {
-            const primary = document.getElementById('primaryColor').value;
-            const bg = document.getElementById('bgColor').value;
-            const maxWidth = document.getElementById('maxWidth').value;
-            const fontSize = document.getElementById('globalFontSize').value;
-            document.documentElement.style.setProperty('--primary', primary);
-            document.getElementById('deviceFrame').style.backgroundColor = bg;
-            document.getElementById('deviceFrame').style.maxWidth = maxWidth + 'px';
-            document.getElementById('deviceFrame').style.fontSize = fontSize;
-            const title = document.querySelector('.site-title');
-            if (title) title.style.color = primary;
-        }
-
-        function applyAnimations() {
-            const anim = document.getElementById('animationSelect').value;
-            if (anim !== 'none') {
-                document.querySelectorAll('.block').forEach(block => block.classList.add('animate-fade-up'));
-            }
-        }
-
-        // Export HTML (embedded CSS – self-contained)
-        function exportHTML() {
-            let rowsHtml = '';
-            for (const row of page) {
-                let colsHtml = '<div style="display:flex; gap:1rem; margin-bottom:1.5rem; flex-wrap:wrap;">';
-                for (const col of row.columns) {
-                    let blocksHtml = '';
-                    for (const block of col.blocks) {
-                        blocksHtml += `<div style="margin-bottom:1rem;">${renderBlockExport(block)}</div>`;
-                    }
-                    colsHtml += `<div style="flex:1; min-width:200px;">${blocksHtml}</div>`;
-                }
-                colsHtml += '</div>';
-                rowsHtml += colsHtml;
-            }
-            const siteTitle = document.getElementById('siteTitleInput').innerText;
-            const siteTagline = document.getElementById('siteTaglineInput').innerText;
-            const primary = document.getElementById('primaryColor').value;
-            const bg = document.getElementById('bgColor').value;
-            const maxWidth = document.getElementById('maxWidth').value;
-            const googleFont = document.getElementById('googleFont').value;
-            const customCss = document.getElementById('customCss').value;
-            const customJs = document.getElementById('customJs').value;
-            const metaTitle = document.getElementById('metaTitle').value || siteTitle;
-            const metaDesc = document.getElementById('metaDescription').value;
-
-            const exportStyles = `
-                * { margin: 0; padding: 0; box-sizing: border-box; }
-                body {
-                    font-family: '${googleFont}', sans-serif;
-                    background: ${bg};
-                    margin: 0;
-                    padding: 2rem 1rem;
-                }
-                .website {
-                    max-width: ${maxWidth}px;
-                    margin: 0 auto;
-                    background: white;
-                    border-radius: 24px;
-                    box-shadow: 0 20px 35px -10px rgba(0,0,0,0.1);
-                    overflow: hidden;
-                }
-                .header {
-                    text-align: center;
-                    padding: 2rem;
-                    border-bottom: 1px solid #e5e7eb;
-                }
-                .site-title {
-                    font-size: 2rem;
-                    font-weight: bold;
-                    color: ${primary};
-                }
-                .tagline {
-                    color: #6b7280;
-                }
-                .content {
-                    padding: 2rem;
-                }
-                .footer {
-                    text-align: center;
-                    font-size: 0.75rem;
-                    color: #94a3b8;
-                    padding: 1rem;
-                    border-top: 1px solid #e5e7eb;
-                }
-                img { max-width: 100%; border-radius: 8px; }
-                a { text-decoration: none; }
-                button, .button {
-                    background: ${primary};
-                    color: white;
-                    border: none;
-                    padding: 0.5rem 1rem;
-                    border-radius: 30px;
-                    cursor: pointer;
-                }
-                ${customCss}
-            `;
-
-            return `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${escapeHtml(metaTitle)}</title>
-    <meta name="description" content="${escapeHtml(metaDesc)}">
-    <link href="https://fonts.googleapis.com/css2?family=${googleFont.replace(' ', '+')}&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>${exportStyles}</style>
-</head>
-<body>
-<div class="website">
-    <div class="header">
-        <div class="site-title">${escapeHtml(siteTitle)}</div>
-        <div class="tagline">${escapeHtml(siteTagline)}</div>
-    </div>
-    <div class="content">
-        ${rowsHtml}
-    </div>
-    <div class="footer">⚡ Built with TeeHea</div>
-</div>
-<script>${customJs}<\/script>
-</body>
-</html>`;
-        }
-
-        function renderBlockExport(block) {
-            if (block.type === 'heading') return `<h2>${escapeHtml(block.text)}</h2>`;
-            if (block.type === 'paragraph') return `<p>${escapeHtml(block.text).replace(/\n/g, '<br>')}</p>`;
-            if (block.type === 'image') return `<img src="${escapeHtml(block.src)}" alt="${escapeHtml(block.alt)}" style="max-width:100%; border-radius:${block.borderRadius || '8px'}">`;
-            if (block.type === 'button') {
-                let target = block.target === '_blank' ? ' target="_blank" rel="noopener"' : '';
-                return `<a href="${escapeHtml(block.url)}"${target} class="button" style="display:inline-block; background:${document.getElementById('primaryColor').value}; color:white; padding:0.5rem 1rem; border-radius:30px;">${escapeHtml(block.label)}</a>`;
-            }
-            if (block.type === 'buttongroup') {
-                let btns = '';
-                block.buttons.forEach(btn => {
-                    let target = btn.target === '_blank' ? ' target="_blank" rel="noopener"' : '';
-                    btns += `<a href="${escapeHtml(btn.url)}"${target} class="button" style="display:inline-block; background:${document.getElementById('primaryColor').value}; color:white; padding:0.5rem 1rem; border-radius:30px; margin:0 0.3rem;">${escapeHtml(btn.label)}</a>`;
-                });
-                return `<div style="display:flex; flex-wrap:wrap; gap:0.5rem;">${btns}</div>`;
-            }
-            if (block.type === 'divider') return `<hr>`;
-            if (block.type === 'spacer') return `<div style="height:${block.height}px;"></div>`;
-            if (block.type === 'icon') return `<i class="fas ${block.icon}"></i> ${escapeHtml(block.text)}`;
-            if (block.type === 'quote') return `<blockquote>“${escapeHtml(block.text)}” — ${escapeHtml(block.author)}</blockquote>`;
-            if (block.type === 'list') return `<ul>${block.items.map(i => `<li>${escapeHtml(i)}</li>`).join('')}</ul>`;
-            if (block.type === 'badge') return `<span style="background:${block.color}; color:white; padding:0.2rem 0.5rem; border-radius:20px;">${escapeHtml(block.text)}</span>`;
-            if (block.type === 'tooltip') return `<span title="${escapeHtml(block.tooltip)}">${escapeHtml(block.text)}</span>`;
-            if (block.type === 'rating') return `<div>${'★'.repeat(block.value)}${'☆'.repeat(block.max - block.value)}</div>`;
-            if (block.type === 'video') return `<div style="position:relative; padding-bottom:56.25%;"><iframe src="${escapeHtml(block.url)}" allowfullscreen style="position:absolute; width:100%; height:100%;"></iframe></div>`;
-            if (block.type === 'gallery') return `<div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:0.5rem;">${block.images.map(img => `<img src="${escapeHtml(img)}" style="width:100%;">`).join('')}</div>`;
-            if (block.type === 'carousel') return `<div style="display:flex; overflow-x:auto; gap:0.5rem;">${block.images.map(img => `<img src="${escapeHtml(img)}" style="flex:0 0 80%;">`).join('')}</div>`;
-            if (block.type === 'map') return `<iframe src="${escapeHtml(block.embed)}" width="100%" height="300"></iframe>`;
-            if (block.type === 'audio') return `<audio controls src="${escapeHtml(block.src)}"></audio>`;
-            if (block.type === 'parallax') return `<div style="background:url('${escapeHtml(block.bgImage)}') fixed center/cover; padding:4rem; color:white;">${escapeHtml(block.text)}</div>`;
-            if (block.type === 'contactform') return `<form><input placeholder="Name"><input placeholder="Email"><textarea placeholder="Message"></textarea><button type="submit" style="background:${document.getElementById('primaryColor').value}; color:white;">Send</button></form>`;
-            if (block.type === 'newsletter') return `<form><input placeholder="Email"><button type="submit" style="background:${document.getElementById('primaryColor').value}; color:white;">Subscribe</button></form>`;
-            if (block.type === 'countdown') return `<div>${escapeHtml(block.label)} ${block.targetDate}</div>`;
-            if (block.type === 'progress') return `<div>${escapeHtml(block.label)} <progress value="${block.percent}" max="100"></progress> ${block.percent}%</div>`;
-            if (block.type === 'accordion') return `<div>${block.items.map(i => `<details><summary>${escapeHtml(i.title)}</summary><p>${escapeHtml(i.content)}</p></details>`).join('')}</div>`;
-            if (block.type === 'tabs') {
-                let tabsHtml = `<div style="display:flex; gap:0.5rem; border-bottom:1px solid #ccc;">${block.tabs.map((t, idx) => `<button data-tab="${idx}">${escapeHtml(t.title)}</button>`).join('')}</div><div>${block.tabs.map((t, idx) => `<div data-tab-content="${idx}">${escapeHtml(t.content)}</div>`).join('')}</div>`;
-                return tabsHtml;
-            }
-            if (block.type === 'modal') return `<button>${escapeHtml(block.buttonText)}</button>`;
-            if (block.type === 'cookie') return `<div style="background:#f0f0f0; padding:1rem;">${escapeHtml(block.message)} <button>${escapeHtml(block.buttonText)}</button></div>`;
-            if (block.type === 'backtotop') return `<button onclick="window.scrollTo({top:0,behavior:'smooth'})">↑ Back to top</button>`;
-            if (block.type === 'timeline') return `<div>${block.events.map(e => `<div><strong>${escapeHtml(e.year)}</strong> ${escapeHtml(e.text)}</div>`).join('')}</div>`;
-            if (block.type === 'pricing') return `<div style="border:1px solid #e5e7eb; border-radius:24px; padding:1rem;"><h3>${escapeHtml(block.name)}</h3><div>${escapeHtml(block.price)}</div><ul>${block.features.map(f => `<li>${escapeHtml(f)}</li>`).join('')}</ul><button>Buy</button></div>`;
-            if (block.type === 'testimonial') return `<div style="background:#f9fafb; padding:1rem;"><p>“${escapeHtml(block.text)}”</p><p><strong>— ${escapeHtml(block.author)}</strong></p></div>`;
-            if (block.type === 'product') return `<div><img src="${escapeHtml(block.image)}" style="width:100%;"><h3>${escapeHtml(block.name)}</h3><p>${escapeHtml(block.price)}</p><button>Add</button></div>`;
-            if (block.type === 'post') return `<div><img src="${escapeHtml(block.image)}"><h3>${escapeHtml(block.title)}</h3><p>${escapeHtml(block.excerpt)}</p><small>${escapeHtml(block.date)}</small></div>`;
-            if (block.type === 'search') return `<input placeholder="Search"><button>🔍</button>`;
-            if (block.type === 'html') return block.code;
-            if (block.type === 'qrcode') return `<div>QR: ${escapeHtml(block.text)}</div>`;
-            if (block.type === 'copy') return `<div>${escapeHtml(block.text)} <button>Copy</button></div>`;
-            if (block.type === 'weather') return `<div>Weather in ${escapeHtml(block.city)}: 22°C</div>`;
-            return `<div>${block.type}</div>`;
-        }
-
-        // Event listeners
-        document.getElementById('undoBtn').addEventListener('click', undo);
-        document.getElementById('redoBtn').addEventListener('click', redo);
-        document.getElementById('saveBtn').addEventListener('click', () => { localStorage.setItem('teeheaProject', JSON.stringify(page)); alert('Saved'); });
-        document.getElementById('loadBtn').addEventListener('click', () => { const data = localStorage.getItem('teeheaProject'); if (data) { page = JSON.parse(data); saveToHistory(); renderPage(); } else alert('No save'); });
-        document.getElementById('darkModeBtn').addEventListener('click', () => document.body.classList.toggle('dark-mode'));
-        document.getElementById('templateSelect').addEventListener('change', (e) => {
-            if (e.target.value === 'blank') page = [];
-            else if (e.target.value === 'personal') {
-                const row = createRow(1);
-                row.columns[0].blocks = [createBlock('heading'), createBlock('paragraph'), createBlock('button')];
-                page = [row];
-            } else if (e.target.value === 'business') {
-                const row = createRow(2);
-                row.columns[0].blocks = [createBlock('heading'), createBlock('paragraph')];
-                row.columns[1].blocks = [createBlock('contactform')];
-                page = [row];
-            } else if (e.target.value === 'portfolio') {
-                const row = createRow(3);
-                row.columns[0].blocks = [createBlock('image')];
-                row.columns[1].blocks = [createBlock('image')];
-                row.columns[2].blocks = [createBlock('image')];
-                page = [row];
-            } else if (e.target.value === 'ecomm') {
-                const row = createRow(2);
-                row.columns[0].blocks = [createBlock('product'), createBlock('product')];
-                row.columns[1].blocks = [createBlock('cart'), createBlock('checkout')];
-                page = [row];
-            } else if (e.target.value === 'landing') {
-                const row = createRow(1);
-                row.columns[0].blocks = [createBlock('heading'), createBlock('paragraph'), createBlock('button'), createBlock('countdown')];
-                page = [row];
-            } else if (e.target.value === 'comingsoon') {
-                const row = createRow(1);
-                row.columns[0].blocks = [createBlock('heading'), createBlock('paragraph'), createBlock('countdown'), createBlock('newsletter')];
-                page = [row];
-            }
-            saveToHistory(); renderPage(); e.target.value = '';
-        });
-        document.getElementById('deviceSelect').addEventListener('change', (e) => document.getElementById('deviceFrame').className = `device-frame ${e.target.value}`);
-        document.getElementById('exportBtn').addEventListener('click', () => {
-            const html = exportHTML();
-            const blob = new Blob([html], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a'); a.href = url; a.download = 'teehea_site.html'; a.click(); URL.revokeObjectURL(url);
-        });
-        document.getElementById('primaryColor').addEventListener('input', () => { updateGlobalPreview(); renderPage(); });
-        document.getElementById('bgColor').addEventListener('input', updateGlobalPreview);
-        document.getElementById('maxWidth').addEventListener('input', updateGlobalPreview);
-        document.getElementById('globalFontSize').addEventListener('input', updateGlobalPreview);
-        document.getElementById('animationSelect').addEventListener('change', applyAnimations);
-
-        // Initialize demo page
-        page = [createRow(2)];
-        page[0].columns[0].blocks = [createBlock('heading'), createBlock('paragraph'), createBlock('buttongroup')];
-        page[0].columns[1].blocks = [createBlock('button'), createBlock('modal')];
-        page[0].columns[0].blocks[0].text = 'Welcome to TeeHea';
-        page[0].columns[0].blocks[1].text = 'Drag & drop blocks from sidebar into columns. Use up/down buttons to reorder. Click on row or column to adjust layout.';
-        page[0].columns[0].blocks[2].buttons = [{ label: 'Primary', url: '#', target: '_self' }, { label: 'Secondary', url: '#', target: '_blank' }];
-        page[0].columns[1].blocks[0].label = 'Start building';
-        page[0].columns[1].blocks[1].buttonText = 'Open modal';
-        page[0].columns[1].blocks[1].content = '<p>Modal content here</p>';
-        saveToHistory();
-        renderPage();
-        setupSidebarDrag();
-        initDropTargets();
-        updateGlobalPreview();
-    </script>
 </body>
 </html>
