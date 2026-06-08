@@ -275,49 +275,94 @@
     </style>
 </head>
 <body>
-    <div id="builderRoot" style="display: flex; flex-direction: column; height: 100%; width: 100%;"></div>
-
-    <script>
-        // ========== SHUTDOWN TIMER ==========
-        // Target: June 7, 2026, 14:58 EEST (UTC+3)
-        const shutdownDate = new Date('2026-06-07T14:58:00+03:00');
-        const now = new Date();
-
-        if (now >= shutdownDate) {
-            // Show the shutdown page immediately
-            document.getElementById('builderRoot').innerHTML = `
-                <div style="height:100vh; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%); font-family:'Inter',sans-serif; padding:1rem;">
-                    <div style="max-width:550px; background:white; border-radius:32px; box-shadow:0 25px 50px -12px rgba(0,0,0,0.25); overflow:hidden; text-align:center;">
-                        <div style="background:#1e293b; padding:2rem 1.5rem; color:white;">
-                            <div style="font-size:2rem; font-weight:800; background:linear-gradient(135deg, #e2e8f0, #94a3b8); -webkit-background-clip:text; background-clip:text; color:transparent;">🧩 TeeHea</div>
-                            <div style="display:inline-block; background:#dc2626; padding:0.3rem 0.8rem; border-radius:30px; font-size:0.75rem; font-weight:600; margin-top:1rem;">Operations ceased</div>
-                        </div>
-                        <div style="padding:2rem 2rem 1.8rem;">
-                            <h1 style="font-size:1.8rem; font-weight:700; color:#0f172a;">Service permanently shut down</h1>
-                            <p style="color:#334155; margin:1rem 0;">TeeHea has officially ceased operations. The builder is no longer available.</p>
-                            <div style="background:#f8fafc; border-radius:20px; padding:1.2rem; text-align:left; margin:1.5rem 0; border:1px solid #e2e8f0;">
-                                <p style="margin-bottom:0.5rem; font-size:0.85rem; color:#475569;"><strong>📅 Effective date:</strong> June 7, 2026, 14:58 EET</p>
-                                <p style="margin-bottom:0.5rem; font-size:0.85rem; color:#475569;">🔒 All hosted projects are no longer accessible.</p>
-                                <p style="margin-bottom:0.5rem; font-size:0.85rem; color:#475569;">📁 No new exports or changes can be made.</p>
-                            </div>
-                            <p style="font-size:0.85rem; background:#fef2f2; padding:0.8rem; border-radius:16px;">⚠️ This service has been discontinued. Thank you for using TeeHea.</p>
-                        </div>
-                        <div style="border-top:1px solid #e5e7eb; padding:1rem 2rem 1.5rem; font-size:0.75rem; color:#6b7280;">&copy; 2026 TeeHea — All operations permanently closed.</div>
-                    </div>
+    <div class="toolbar">
+        <div class="logo">🧩 TeeHea</div>
+        <div class="btn-group">
+            <button id="undoBtn" class="btn">↩️ Undo</button>
+            <button id="redoBtn" class="btn">↪️ Redo</button>
+            <button id="saveBtn" class="btn">💾 Save</button>
+            <button id="loadBtn" class="btn">📂 Load</button>
+            <button id="darkModeBtn" class="btn">🌙 Dark mode</button>
+            <select id="templateSelect" class="btn"><option value="">📁 Templates</option><option value="blank">Blank</option><option value="personal">Personal</option><option value="business">Business</option><option value="portfolio">Portfolio</option><option value="ecomm">E‑commerce</option><option value="landing">Landing page</option><option value="comingsoon">Coming soon</option></select>
+            <select id="deviceSelect" class="btn"><option value="desktop">💻 Desktop</option><option value="tablet">📱 Tablet</option><option value="mobile">📲 Mobile</option></select>
+            <button id="exportBtn" class="btn btn-primary">⬇️ Export HTML</button>
+        </div>
+    </div>
+    <div class="main">
+        <div class="sidebar" id="blockSidebar">
+            <div class="sidebar-category"><h4>LAYOUT</h4><div class="block-type" data-type="row">➕ Add Row</div></div>
+            <div class="sidebar-category"><h4>BASIC</h4>
+                <div class="block-type" data-type="heading">Heading</div><div class="block-type" data-type="paragraph">Paragraph</div>
+                <div class="block-type" data-type="image">Image</div><div class="block-type" data-type="button">Button</div>
+                <div class="block-type" data-type="buttongroup">Button Group</div>
+                <div class="block-type" data-type="divider">Divider</div><div class="block-type" data-type="spacer">Spacer</div>
+                <div class="block-type" data-type="icon">Icon</div><div class="block-type" data-type="quote">Quote</div>
+                <div class="block-type" data-type="list">List</div><div class="block-type" data-type="badge">Badge</div>
+                <div class="block-type" data-type="tooltip">Tooltip</div><div class="block-type" data-type="rating">Rating</div>
+            </div>
+            <div class="sidebar-category"><h4>MEDIA</h4>
+                <div class="block-type" data-type="video">Video</div><div class="block-type" data-type="gallery">Gallery</div>
+                <div class="block-type" data-type="carousel">Carousel</div><div class="block-type" data-type="map">Map</div>
+                <div class="block-type" data-type="audio">Audio</div><div class="block-type" data-type="parallax">Parallax</div>
+            </div>
+            <div class="sidebar-category"><h4>FORMS</h4>
+                <div class="block-type" data-type="contactform">Contact</div><div class="block-type" data-type="newsletter">Newsletter</div>
+                <div class="block-type" data-type="fileupload">File upload</div><div class="block-type" data-type="multistep">Multi‑step</div>
+            </div>
+            <div class="sidebar-category"><h4>ADVANCED</h4>
+                <div class="block-type" data-type="countdown">Countdown</div><div class="block-type" data-type="progress">Progress</div>
+                <div class="block-type" data-type="accordion">Accordion</div><div class="block-type" data-type="tabs">Tabs</div>
+                <div class="block-type" data-type="modal">Modal</div><div class="block-type" data-type="cookie">Cookie banner</div>
+                <div class="block-type" data-type="backtotop">Back to top</div><div class="block-type" data-type="timeline">Timeline</div>
+                <div class="block-type" data-type="pricing">Pricing</div><div class="block-type" data-type="testimonial">Testimonial</div>
+            </div>
+            <div class="sidebar-category"><h4>INTERACTIVE</h4>
+                <div class="block-type" data-type="countup">Count‑up</div><div class="block-type" data-type="typed">Typewriter</div>
+                <div class="block-type" data-type="particles">Particles</div>
+            </div>
+            <div class="sidebar-category"><h4>E‑COMMERCE</h4>
+                <div class="block-type" data-type="product">Product card</div><div class="block-type" data-type="cart">Cart</div>
+                <div class="block-type" data-type="checkout">Checkout</div>
+            </div>
+            <div class="sidebar-category"><h4>BLOG</h4>
+                <div class="block-type" data-type="post">Post preview</div><div class="block-type" data-type="search">Search</div>
+                <div class="block-type" data-type="share">Share buttons</div>
+            </div>
+            <div class="sidebar-category"><h4>UTILITIES</h4>
+                <div class="block-type" data-type="html">HTML embed</div><div class="block-type" data-type="qrcode">QR code</div>
+                <div class="block-type" data-type="copy">Copy text</div><div class="block-type" data-type="weather">Weather</div>
+            </div>
+        </div>
+        <div class="canvas">
+            <div class="device-frame desktop" id="deviceFrame">
+                <div class="site-header">
+                    <div class="site-title" contenteditable="true" id="siteTitleInput">My Site</div>
+                    <div class="site-tagline" contenteditable="true" id="siteTaglineInput">Edit tagline</div>
                 </div>
-            `;
-            // Stop any further execution
-            throw new Error("Service has ceased operations.");
-        }
+                <div class="page-container" id="pageContainer"></div>
+                <footer>⚡ Built with TeeHea</footer>
+            </div>
+        </div>
+        <div class="property-panel" id="propertyPanel">
+            <div class="property-group"><h4>Global styles</h4>
+                <label>Primary color</label><input type="color" id="primaryColor" value="#2563eb" class="color-input">
+                <label>Background</label><input type="color" id="bgColor" value="#ffffff" class="color-input">
+                <label>Max width (px)</label><input type="number" id="maxWidth" value="1200">
+                <label>Google Font</label><select id="googleFont"><option>Inter</option><option>Roboto</option><option>Open Sans</option><option>Poppins</option></select>
+                <label>Font size</label><select id="globalFontSize"><option value="0.9rem">Small</option><option value="1rem" selected>Medium</option><option value="1.2rem">Large</option></select>
+                <label>Animation</label><select id="animationSelect"><option value="none">None</option><option value="fade-up">Fade up</option></select>
+            </div>
+            <div class="property-group"><h4>SEO</h4>
+                <label>Meta title</label><input id="metaTitle" placeholder="Page title">
+                <label>Meta description</label><textarea id="metaDescription" rows="2"></textarea>
+            </div>
+            <div class="property-group"><h4>Selected element</h4><div id="elementProperties">Click on a row, column, or block to edit.</div></div>
+            <div class="property-group"><label>Custom CSS</label><textarea id="customCss" rows="3"></textarea><label>Custom JS</label><textarea id="customJs" rows="3"></textarea></div>
+        </div>
+    </div>
 
-        // ========== IF NOT YET SHUTDOWN, LOAD FULL BUILDER ==========
-        // (All builder code from previous stable version goes here)
-        // We'll embed the entire TeeHea builder logic directly.
-        // For brevity, the full builder script is inserted below.
-    </script>
     <script>
-        // ========== TEeHea FULL BUILDER LOGIC (inline) ==========
-        // This is the exact same builder code as the previous "self-contained" version.
+        // ========== TEeHea FULL BUILDER LOGIC ==========
         let page = [];
         let nextId = 1000;
         let history = [];
@@ -330,7 +375,6 @@
             return s.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;');
         }
 
-        // Block factory (all types)
         function createBlock(type) {
             const id = nextId++;
             if (type === 'heading') return { id, type, text: 'New heading', marginTop: '', marginBottom: '' };
@@ -647,7 +691,6 @@
             return div;
         }
 
-        // Drag & drop from sidebar
         function initDropTargets() {
             const containers = document.querySelectorAll('.blocks-container-in-col');
             containers.forEach(container => {
@@ -690,7 +733,6 @@
             });
         }
 
-        // Property editors
         function updateElementProperties() {
             const container = document.getElementById('elementProperties');
             if (!selectedElement) { container.innerHTML = 'Click on a row, column, or block to edit.'; return; }
@@ -828,7 +870,6 @@
             }
         }
 
-        // Export HTML (embedded CSS – self-contained)
         function exportHTML() {
             let rowsHtml = '';
             for (const row of page) {
@@ -1055,17 +1096,6 @@
         setupSidebarDrag();
         initDropTargets();
         updateGlobalPreview();
-
-        // Now mount the builder into the DOM (the builderRoot div already exists)
-        // The builder elements are already appended by renderPage() and the initial HTML structure.
-        // Wait for the DOM to be ready
-        window.addEventListener('DOMContentLoaded', () => {
-            // The builder HTML elements are part of the static page, so they already exist.
-            // But we need to ensure the pageContainer exists.
-            if (!document.getElementById('pageContainer')) {
-                // Fallback: rebuild the entire builder UI dynamically? Not needed.
-            }
-        });
     </script>
 </body>
 </html>
